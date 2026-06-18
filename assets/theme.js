@@ -103,3 +103,86 @@ closeSearch?.addEventListener('click',()=>{
 searchModal.classList.remove('active');
 
 });
+
+/* ── Announcement bar ── */
+(function () {
+  const bar     = document.getElementById('annBar');
+  const closeBtn = document.getElementById('annClose');
+  if (!bar) return;
+
+  const KEY = 'bh_ann_dismissed';
+
+  if (!sessionStorage.getItem(KEY)) {
+    document.body.classList.add('ann-visible');
+  } else {
+    bar.classList.add('ann-bar--hidden');
+  }
+
+  closeBtn?.addEventListener('click', () => {
+    bar.classList.add('ann-bar--hidden');
+    document.body.classList.remove('ann-visible');
+    sessionStorage.setItem(KEY, '1');
+
+    /* Snap header back to top */
+    const header = document.querySelector('.site-header');
+    if (header) header.style.top = '0';
+  });
+})();
+
+/* ── Dropdown nav ── */
+(function () {
+  const items = document.querySelectorAll('.nav-item--dropdown');
+
+  items.forEach(item => {
+    const btn = item.querySelector('.nav-dropdown-trigger');
+
+    btn?.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = item.classList.contains('open');
+
+      /* Close all others */
+      items.forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* Click outside closes all */
+  document.addEventListener('click', () => {
+    items.forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* Escape key */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      items.forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+})();
+
+/* ── Mobile menu — animated hamburger ── */
+(function () {
+  const btn  = document.getElementById('mobileMenuBtn');
+  const menu = document.querySelector('#mobileMenu');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    menu?.classList.toggle('active');
+    document.body.style.overflow = isOpen ? '' : 'hidden';
+  });
+})();

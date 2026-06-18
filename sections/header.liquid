@@ -1,61 +1,89 @@
-<header class="site-header">
+<header class="site-header" id="siteHeader">
 
   <div class="container">
 
     <div class="header-inner">
 
       <a href="/" class="logo">
-
-        {% if section.settings.logo %}
+        {%- if section.settings.logo -%}
           {{
             section.settings.logo
             | image_url: width: 400
-            | image_tag
+            | image_tag: loading: 'eager'
           }}
-        {% else %}
+        {%- else -%}
           BURANSHH
-        {% endif %}
-
+        {%- endif -%}
       </a>
 
-      <nav class="desktop-nav">
+      <nav class="desktop-nav" aria-label="Main navigation">
+        {%- for link in linklists[section.settings.menu].links -%}
 
-        {% for link in linklists[section.settings.menu].links %}
+          {%- if link.links != blank -%}
+            <div class="nav-item nav-item--dropdown">
+              <button
+                class="nav-dropdown-trigger"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                {{ link.title }}
+                <span class="nav-chevron" aria-hidden="true"></span>
+              </button>
+              <div class="nav-dropdown" role="region">
+                {%- for sub in link.links -%}
+                  <a href="{{ sub.url }}" class="nav-dropdown__link">{{ sub.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
 
-          <a href="{{ link.url }}">
-            {{ link.title }}
-          </a>
+          {%- else -%}
+            <div class="nav-item">
+              
+                href="{{ link.url }}"
+                class="nav-link{%- if link.active %} nav-link--active{%- endif -%}"
+                {%- if link.active %} aria-current="page"{%- endif -%}
+              >
+                {{ link.title }}
+              </a>
+            </div>
+          {%- endif -%}
 
-        {% endfor %}
-
+        {%- endfor -%}
       </nav>
 
       <div class="header-icons">
 
-          <a
-            href="#"
-            class="search-trigger">
-
+        {%- if section.settings.show_search -%}
+          <a href="#" class="search-trigger header-icon-link" aria-label="Search">
             Search
-
           </a>
+        {%- endif -%}
 
-        <a href="/account">
-          Account
+        {%- if section.settings.show_account -%}
+          <a href="/account" class="header-icon-link" aria-label="Account">
+            Account
+          </a>
+        {%- endif -%}
+
+        <a href="#" class="cart-trigger header-icon-link" aria-label="Cart, {{ cart.item_count }} items">
+          Cart
+          {%- if cart.item_count > 0 -%}
+            <span class="cart-count" aria-hidden="true">{{ cart.item_count }}</span>
+          {%- endif -%}
         </a>
-
-        <a
-          href="#"
-          class="cart-trigger">
-
-          Cart ({{ cart.item_count }})
-
-          </a>
 
       </div>
 
-      <button class="mobile-menu-btn">
-        ☰
+      <button
+        class="mobile-menu-btn"
+        id="mobileMenuBtn"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobileMenu"
+      >
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
       </button>
 
     </div>
@@ -66,17 +94,30 @@
 
 {% schema %}
 {
-  "name":"Header",
-  "settings":[
+  "name": "Header",
+  "settings": [
     {
-      "type":"image_picker",
-      "id":"logo",
-      "label":"Logo"
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
     },
     {
-      "type":"link_list",
-      "id":"menu",
-      "label":"Menu"
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account link",
+      "default": true
     }
   ]
 }
