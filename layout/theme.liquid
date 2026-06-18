@@ -26,11 +26,15 @@ rel="stylesheet">
 
 <body>
 
+{% sections 'header-group' %}
+
 <main>
 
 {{ content_for_layout }}
 
 </main>
+
+{% sections 'footer-group' %}
 
 {{ 'theme.js' | asset_url | script_tag }}
 

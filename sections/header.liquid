@@ -1,0 +1,75 @@
+<header class="site-header">
+
+  <div class="container">
+
+    <div class="header-inner">
+
+      <a href="/" class="logo">
+
+        {% if section.settings.logo %}
+          {{
+            section.settings.logo
+            | image_url: width: 400
+            | image_tag
+          }}
+        {% else %}
+          BURANSHH
+        {% endif %}
+
+      </a>
+
+      <nav class="desktop-nav">
+
+        {% for link in linklists[section.settings.menu].links %}
+
+          <a href="{{ link.url }}">
+            {{ link.title }}
+          </a>
+
+        {% endfor %}
+
+      </nav>
+
+      <div class="header-icons">
+
+        <a href="/search">
+          Search
+        </a>
+
+        <a href="/account">
+          Account
+        </a>
+
+        <a href="/cart">
+          Cart
+        </a>
+
+      </div>
+
+      <button class="mobile-menu-btn">
+        ☰
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+{% schema %}
+{
+  "name":"Header",
+  "settings":[
+    {
+      "type":"image_picker",
+      "id":"logo",
+      "label":"Logo"
+    },
+    {
+      "type":"link_list",
+      "id":"menu",
+      "label":"Menu"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,17 @@
+<div class="mega-menu">
+
+<div class="mega-column">
+
+<h4>Collections</h4>
+
+{% for link in link.links %}
+
+<a href="{{ link.url }}">
+{{ link.title }}
+</a>
+
+{% endfor %}
+
+</div>
+
+</div>

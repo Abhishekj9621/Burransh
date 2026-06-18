@@ -1,0 +1,25 @@
+<a href="{{ product.url }}" class="product-card">
+
+<div class="product-card-image">
+
+{{
+product.featured_image
+| image_url: width:1000
+| image_tag
+}}
+
+</div>
+
+<div class="product-card-info">
+
+<h3>
+{{ product.title }}
+</h3>
+
+<p>
+{{ product.price | money }}
+</p>
+
+</div>
+
+</a>
