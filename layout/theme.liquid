@@ -8,12 +8,9 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1">
 
-<title>
-{{ page_title }}
-</title>
+<title>{{ page_title }}</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap"
 rel="stylesheet">
@@ -26,15 +23,13 @@ rel="stylesheet">
 
 <body>
 
-{% sections 'header-group' %}
+{% section 'header' %}
 
 <main>
-
-{{ content_for_layout }}
-
+  {{ content_for_layout }}
 </main>
 
-{% sections 'footer-group' %}
+{% section 'footer' %}
 
 {{ 'theme.js' | asset_url | script_tag }}
 
