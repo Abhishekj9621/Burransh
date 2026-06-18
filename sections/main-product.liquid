@@ -1,0 +1,287 @@
+{% comment %}
+  BURANSHH — Main Product Section
+{% endcomment %}
+
+{%- liquid
+  assign product = product
+  assign current_variant = product.selected_or_first_available_variant
+  assign images = product.images
+-%}
+
+<section class="product-page">
+  <div class="container">
+    <div class="product-page__inner">
+
+      {%- comment -%} GALLERY {%- endcomment -%}
+      <div class="product-gallery">
+        <div class="product-gallery__thumbnails">
+          {%- if images.size > 0 -%}
+            {%- for image in images limit: 6 -%}
+              {%- assign thumb_alt = image.alt | escape -%}
+              <button class="product-gallery__thumb{% if forloop.first %} active{% endif %}" aria-label="View image {{ forloop.index }}">
+                {{ image | image_url: width: 160 | image_tag: loading: 'lazy', alt: thumb_alt }}
+              </button>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..4) -%}
+              <button class="product-gallery__thumb{% if forloop.first %} active{% endif %}" aria-label="View image {{ i }}">
+                <div style="width:100%;height:100%;background:var(--color-parchment);"></div>
+              </button>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        <div class="product-gallery__main">
+          {%- if product.featured_image -%}
+            {%- assign main_img_alt = product.featured_image.alt | default: product.title | escape -%}
+            {{ product.featured_image | image_url: width: 1200
+              | image_tag:
+                loading: 'eager',
+                fetchpriority: 'high',
+                widths: '600, 900, 1200',
+                sizes: '(max-width: 900px) 100vw, 50vw',
+                alt: main_img_alt
+            }}
+          {%- else -%}
+            <div style="width:100%;height:100%;background:var(--color-parchment);display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:80px;height:80px;opacity:0.2;">
+                <rect x="14" y="14" width="36" height="36" rx="2" stroke="#676A26" stroke-width="1"/>
+                <circle cx="32" cy="32" r="8" stroke="#676A26" stroke-width="1"/>
+              </svg>
+            </div>
+          {%- endif -%}
+          <button class="product-gallery__zoom-btn" aria-label="Zoom image">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="5.5"/>
+              <path d="M12 12l4 4M8 5.5v5M5.5 8h5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {%- comment -%} PRODUCT INFO {%- endcomment -%}
+      <div class="product-info">
+        <p class="product-info__breadcrumb">
+          <a href="{{ routes.all_products_collection_url }}" style="color:inherit;">Shop</a>
+          <span aria-hidden="true">/</span>
+          <span>{{ product.type | default: 'Collection' }}</span>
+        </p>
+
+        <h1 class="product-info__title">{{ product.title }}</h1>
+
+        {%- if product.vendor != blank -%}
+          <p class="product-info__subtitle">{{ product.vendor }}</p>
+        {%- endif -%}
+
+        <div class="product-info__price">
+          <span class="product-info__price-current">{{ current_variant.price | money }}</span>
+          {%- if current_variant.compare_at_price > current_variant.price -%}
+            <span class="product-info__price-original">{{ current_variant.compare_at_price | money }}</span>
+            <span class="product-info__price-sale-badge">
+              Save {{ current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round }}%
+            </span>
+          {%- endif -%}
+        </div>
+
+        <p style="font-size:13px;color:var(--color-text-muted);line-height:1.85;max-width:440px;">
+          {{ product.description | strip_html | truncatewords: 35 }}
+        </p>
+
+        <div class="product-divider"></div>
+
+        {%- comment -%} Color options (from variant option named Color) {%- endcomment -%}
+        {%- assign color_option_index = -1 -%}
+        {%- for option in product.options_with_values -%}
+          {%- if option.name == 'Color' or option.name == 'Colour' -%}
+            {%- assign color_option_index = forloop.index0 -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if color_option_index > -1 -%}
+          {%- assign color_option = product.options_with_values[color_option_index] -%}
+          <div class="product-option-label">
+            <span>Color &mdash; <span id="selected-color">{{ color_option.values.first }}</span></span>
+          </div>
+          <div class="color-options" role="radiogroup" aria-label="Select color">
+            {%- for value in color_option.values -%}
+              <button class="color-option{% if forloop.first %} selected{% endif %}"
+                      data-color="{{ value }}"
+                      role="radio"
+                      aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
+                      aria-label="{{ value }}"
+                      style="background: {{ value | handle | replace: '-', '' }};
+                             background: var(--color-forest);"
+                      title="{{ value }}">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Size options {%- endcomment -%}
+        {%- assign size_option_index = -1 -%}
+        {%- for option in product.options_with_values -%}
+          {%- if option.name == 'Size' -%}
+            {%- assign size_option_index = forloop.index0 -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if size_option_index > -1 -%}
+          {%- assign size_option = product.options_with_values[size_option_index] -%}
+          <div class="product-option-label">
+            <span>Size</span>
+            <span class="size-guide-link" data-accordion-trigger="size-guide">Size Guide</span>
+          </div>
+          <div class="size-options" role="radiogroup" aria-label="Select size">
+            {%- for value in size_option.values -%}
+              <button class="size-option{% if forloop.first %} selected{% endif %}"
+                      data-size="{{ value }}"
+                      role="radio"
+                      aria-checked="{% if forloop.first %}true{% else %}false{% endif %}">
+                {{ value }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="product-option-label">
+            <span>Size</span>
+            <span class="size-guide-link">Size Guide</span>
+          </div>
+          <div class="size-options" role="radiogroup" aria-label="Select size">
+            {%- for s in 'XS,S,M,L,XL' | split: ',' -%}
+              <button class="size-option{% if forloop.first %} selected{% endif %}" data-size="{{ s }}">{{ s }}</button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Quantity + ATC {%- endcomment -%}
+        <div class="product-actions">
+          <div class="quantity-selector">
+            <button class="quantity-btn" data-qty-minus aria-label="Decrease quantity">−</button>
+            <input type="number" class="quantity-input" data-quantity value="1" min="1" aria-label="Quantity">
+            <button class="quantity-btn" data-qty-plus aria-label="Increase quantity">+</button>
+          </div>
+
+          {%- if product.available -%}
+            <button class="atc-btn" data-atc="{{ current_variant.id }}">Add to Bag</button>
+          {%- else -%}
+            <button class="atc-btn" disabled style="opacity:0.5;cursor:not-allowed;">Sold Out</button>
+          {%- endif -%}
+
+          <button class="wishlist-btn" aria-label="Add to wishlist">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 17s-7-4.5-7-9A4 4 0 0110 5.5 4 4 0 0117 8c0 4.5-7 9-7 9z"/>
+            </svg>
+          </button>
+        </div>
+
+        {%- comment -%} Trust / meta items {%- endcomment -%}
+        <div class="product-meta-list">
+          <div class="product-meta-item">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h2l2.4 7.4a1 1 0 00.96.72h6.28a1 1 0 00.96-.72L17 7H5"/></svg>
+            <span>Free shipping on orders above ₹1,999</span>
+          </div>
+          <div class="product-meta-item">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg"><path d="M18 4l12 4v10c0 7-5 11-12 14C11 29 6 25 6 18V8l12-4Z" transform="scale(0.6)"/><path d="M5 10l2 2 4-5" transform="scale(0.85)"/></svg>
+            <span>Easy 7-day returns &amp; exchanges</span>
+          </div>
+          <div class="product-meta-item">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg"><path d="M10 2C10 2 12 6 10 9C8 6 10 2 10 2Z"/><circle cx="10" cy="10" r="7"/></svg>
+            <span>Handcrafted by Himalayan artisans</span>
+          </div>
+        </div>
+
+        {%- comment -%} Accordion details {%- endcomment -%}
+        <div class="product-accordion">
+          <div class="accordion-item open">
+            <button class="accordion-trigger" aria-expanded="true">
+              Product Details
+              <span class="accordion-icon"></span>
+            </button>
+            <div class="accordion-body open">
+              {{ product.description }}
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false">
+              Fabric &amp; Care
+              <span class="accordion-icon"></span>
+            </button>
+            <div class="accordion-body">
+              <ul>
+                <li>Handwoven natural fabric, sourced responsibly</li>
+                <li>Hand wash cold or dry clean recommended</li>
+                <li>Do not bleach. Iron on low heat.</li>
+                <li>Color may vary slightly due to handcrafted dyeing process</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item" id="size-guide">
+            <button class="accordion-trigger" aria-expanded="false">
+              Size Guide
+              <span class="accordion-icon"></span>
+            </button>
+            <div class="accordion-body">
+              <p>Our pieces are designed for an easy, relaxed fit. If you're between sizes, we recommend sizing up for the most comfortable everyday wear.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false">
+              Shipping &amp; Returns
+              <span class="accordion-icon"></span>
+            </button>
+            <div class="accordion-body">
+              <p>Orders ship within 3–5 business days, handcrafted with care. Free shipping on orders above ₹1,999. Easy returns within 7 days of delivery.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} Related products {%- endcomment -%}
+{%- if section.settings.show_related -%}
+<section class="featured-collection section-padding" style="background:var(--color-parchment);" aria-label="You may also like">
+  <div class="container">
+    <div class="featured-collection__header">
+      <div>
+        <div class="section-label">You May Also Like</div>
+        <h2 class="featured-collection__title">Complete the look</h2>
+      </div>
+    </div>
+    <div class="product-grid">
+      {%- assign related_count = 0 -%}
+      {%- for p in collections.all.products limit: 4 -%}
+        {%- unless p.id == product.id -%}
+          {%- render 'product-card', product: p -%}
+          {%- assign related_count = related_count | plus: 1 -%}
+        {%- endunless -%}
+      {%- endfor -%}
+      {%- if related_count == 0 -%}
+        {%- for i in (1..4) -%}
+          {%- render 'product-card-placeholder', index: i -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Information",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_related",
+      "label": "Show related products",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

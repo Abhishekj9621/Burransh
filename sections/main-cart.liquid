@@ -1,0 +1,82 @@
+{% comment %}
+  BURANSHH — Main Cart Page Section
+{% endcomment %}
+
+<section style="padding: var(--space-lg) 0 var(--space-xl);">
+  <div class="container">
+    <div class="section-label">Your Bag</div>
+    <h1 style="font-family:var(--font-serif);font-size:clamp(34px,5vw,52px);font-weight:300;color:var(--color-bark);margin-bottom:48px;">
+      {{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}
+    </h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div style="text-align:center;padding:80px 20px;">
+        <p style="font-family:var(--font-serif);font-size:24px;font-style:italic;color:var(--color-text-muted);margin-bottom:28px;">
+          Your bag is feeling light.
+        </p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">Start Shopping</a>
+      </div>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:64px;align-items:start;">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            {%- for item in cart.items -%}
+              <div style="display:grid;grid-template-columns:120px 1fr auto;gap:24px;padding:24px 0;border-bottom:0.5px solid var(--color-border);align-items:start;">
+                <div style="aspect-ratio:3/4;overflow:hidden;background:var(--color-parchment);">
+                  {%- if item.image -%}
+                    {%- assign cart_item_alt = item.title | escape -%}
+                    {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: cart_item_alt, style: 'width:100%;height:100%;object-fit:cover;' }}
+                  {%- endif -%}
+                </div>
+                <div>
+                  <h3 style="font-family:var(--font-serif);font-size:18px;font-weight:300;color:var(--color-bark);margin-bottom:6px;">
+                    <a href="{{ item.url }}">{{ item.product.title }}</a>
+                  </h3>
+                  {%- if item.variant.title != 'Default Title' -%}
+                    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-sage);margin-bottom:12px;">{{ item.variant.title }}</p>
+                  {%- endif -%}
+                  <div class="quantity-selector" style="width:fit-content;">
+                    <button type="button" class="quantity-btn" data-qty="{{ forloop.index }}" data-delta="down">−</button>
+                    <span class="cart-item__qty-num" style="width:40px;text-align:center;display:inline-block;">{{ item.quantity }}</span>
+                    <button type="button" class="quantity-btn" data-qty="{{ forloop.index }}" data-delta="up">+</button>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <p style="font-size:16px;color:var(--color-bark);margin-bottom:12px;">{{ item.final_line_price | money }}</p>
+                  <button type="button" data-cart-remove="{{ forloop.index }}" style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#bbb;">Remove</button>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          <div style="background:var(--color-parchment);padding:32px;">
+            <h2 style="font-family:var(--font-serif);font-size:22px;font-weight:300;color:var(--color-bark);margin-bottom:24px;">Order Summary</h2>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-text-muted);margin-bottom:12px;">
+              <span>Subtotal</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-text-muted);margin-bottom:24px;">
+              <span>Shipping</span>
+              <span>{% if cart.total_price >= 199900 %}Free{% else %}Calculated at checkout{% endif %}</span>
+            </div>
+            <div style="height:0.5px;background:var(--color-border);margin-bottom:24px;"></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:28px;">
+              <span style="font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-bark);">Total</span>
+              <span style="font-family:var(--font-serif);font-size:24px;color:var(--color-bark);">{{ cart.total_price | money }}</span>
+            </div>
+            <button type="submit" name="checkout" class="btn btn--primary" style="width:100%;justify-content:center;">
+              Checkout
+            </button>
+          </div>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,202 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Buranshh",
+    "theme_version": "1.0.0",
+    "theme_author": "Buranshh Design Studio",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Recommended size: 32x32px"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Social sharing image",
+        "info": "Used when sharing links on social media. Recommended: 1200x630px"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Brand Palette"
+      },
+      {
+        "type": "color",
+        "id": "color_forest",
+        "label": "Deep Forest (Primary)",
+        "default": "#676A26"
+      },
+      {
+        "type": "color",
+        "id": "color_sage",
+        "label": "Sage (Secondary)",
+        "default": "#898C44"
+      },
+      {
+        "type": "color",
+        "id": "color_moss",
+        "label": "Moss (Depth)",
+        "default": "#4F5222"
+      },
+      {
+        "type": "color",
+        "id": "color_parchment",
+        "label": "Parchment (Warmth)",
+        "default": "#F0EDD0"
+      },
+      {
+        "type": "color",
+        "id": "color_bark",
+        "label": "Bark (Text/Dark)",
+        "default": "#3C3F14"
+      },
+      {
+        "type": "color",
+        "id": "color_red",
+        "label": "Buransh Red (Accent only)",
+        "default": "#B54B3C",
+        "info": "Reserved for seasonal campaigns and special editions only."
+      },
+      {
+        "type": "color",
+        "id": "color_cream",
+        "label": "Cream (Background)",
+        "default": "#FAF8EF"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Display / Headings"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Heading font",
+        "default": "cormorant_garamond_n4"
+      },
+      {
+        "type": "header",
+        "content": "Body Text"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "jost_n4"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1100,
+        "max": 1600,
+        "step": 20,
+        "unit": "px",
+        "label": "Max page width",
+        "default": 1320
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 40,
+        "max": 160,
+        "step": 8,
+        "unit": "px",
+        "label": "Space between sections",
+        "default": 96
+      }
+    ]
+  },
+  {
+    "name": "Product Cards",
+    "settings": [
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "label": "Image aspect ratio",
+        "options": [
+          { "value": "3/4", "label": "Portrait (3:4)" },
+          { "value": "1/1", "label": "Square (1:1)" },
+          { "value": "4/5", "label": "Tall (4:5)" }
+        ],
+        "default": "3/4"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show vendor/brand name on cards",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_quick_add",
+        "label": "Enable 'Add to Bag' on hover",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart behavior",
+        "options": [
+          { "value": "drawer", "label": "Drawer (slide-out)" },
+          { "value": "page", "label": "Page redirect" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "range",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "min": 0,
+        "max": 5000,
+        "step": 100,
+        "unit": "₹",
+        "default": 1999
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_pinterest_link",
+        "label": "Pinterest"
+      }
+    ]
+  }
+]

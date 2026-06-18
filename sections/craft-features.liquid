@@ -1,0 +1,171 @@
+{% comment %}
+  BURANSHH — Craft Features (USP) Section
+  4-column parchment grid with icons
+{% endcomment %}
+
+<section class="craft-features" aria-labelledby="cf-heading-{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.title != blank -%}
+      <div style="text-align:center; margin-bottom: var(--space-lg);">
+        {%- if section.settings.label != blank -%}
+          <div class="section-label" style="justify-content:center;" aria-hidden="true">
+            {{ section.settings.label }}
+          </div>
+        {%- endif -%}
+        <h2 id="cf-heading-{{ section.id }}" style="font-family:var(--font-serif);font-size:clamp(28px,3.5vw,44px);font-weight:300;color:var(--color-bark);">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+    {%- endif -%}
+
+    <div class="craft-features__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'feature' -%}
+          <div class="craft-feature" {{ block.shopify_attributes }}>
+            <span class="craft-feature__num">0{{ forloop.index }}</span>
+
+            <div class="craft-feature__icon" aria-hidden="true">
+              {%- case block.settings.icon -%}
+                {%- when 'needle' -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 28L28 8M24 8h4v4M18 14l-10 14"/>
+                    <circle cx="12" cy="24" r="2"/>
+                  </svg>
+                {%- when 'leaf' -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 28C8 28 8 12 24 8C24 8 28 20 18 26C14 28 8 28 8 28Z"/>
+                    <path d="M8 28L18 18"/>
+                  </svg>
+                {%- when 'package' -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="14" width="24" height="16" rx="1"/>
+                    <path d="M6 14l6-8h12l6 8"/>
+                    <path d="M14 14v16M22 14v16M6 18h24"/>
+                  </svg>
+                {%- when 'truck' -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="2" y="12" width="22" height="14" rx="1"/>
+                    <path d="M24 16h6l4 6v4h-10V16Z"/>
+                    <circle cx="8" cy="28" r="2.5"/>
+                    <circle cx="28" cy="28" r="2.5"/>
+                  </svg>
+                {%- when 'shield' -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 4l12 4v10c0 7-5 11-12 14C11 29 6 25 6 18V8l12-4Z"/>
+                    <path d="M13 18l3 3 7-8"/>
+                  </svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 30s-13-7-13-16a7 7 0 0113-3.5A7 7 0 0131 14c0 9-13 16-13 16Z"/>
+                  </svg>
+                {%- else -%}
+                  <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="12"/>
+                    <path d="M18 14v4l3 3"/>
+                  </svg>
+              {%- endcase -%}
+            </div>
+
+            <h3 class="craft-feature__title">{{ block.settings.title }}</h3>
+            <p class="craft-feature__body">{{ block.settings.body }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Craft Features",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section label",
+      "default": "Why Buranshh"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "The craft behind every piece"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "needle", "label": "Needle / Craft" },
+            { "value": "leaf", "label": "Leaf / Nature" },
+            { "value": "package", "label": "Package" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "shield", "label": "Quality Shield" },
+            { "value": "heart", "label": "Heart" }
+          ],
+          "default": "needle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Handcrafted"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Description",
+          "default": "Every piece is made by skilled artisans using traditional techniques, with attention to every stitch."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Craft Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "needle",
+            "title": "Hand-stitched",
+            "body": "Every piece made by skilled artisans, stitch by careful stitch. No shortcuts, no compromises."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "leaf",
+            "title": "Naturally Sourced",
+            "body": "Fabrics and dyes drawn from natural origins. Earthy, breathable, and built for real life."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "shield",
+            "title": "Made to Last",
+            "body": "Quality implied, never shouted. Garments designed to outlast trends and grow with you."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "heart",
+            "title": "With Intention",
+            "body": "Slow fashion for every day. Pieces you reach for without thinking, season after season."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

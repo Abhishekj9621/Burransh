@@ -1,0 +1,153 @@
+{% comment %}
+  BURANSHH — Header Section
+  Includes: Announcement Bar, Logo, Navigation, Cart/Search/Wishlist icons
+{% endcomment %}
+
+{%- if section.settings.announcement_text != blank -%}
+<div class="announcement-bar" role="note" aria-label="Announcement">
+  <span>{{ section.settings.announcement_text }}</span>
+</div>
+{%- endif -%}
+
+<header class="site-header" role="banner">
+  <div class="container">
+    <div class="header-inner">
+
+      {%- comment -%} Left Nav {%- endcomment -%}
+      <nav class="header-nav" role="navigation" aria-label="Main navigation">
+        {%- for link in section.settings.menu.links limit: 4 -%}
+          {%- if link.links.size > 0 -%}
+            <div class="header-nav__item" style="position:relative;">
+              <a href="{{ link.url }}" class="header-nav__link" aria-expanded="false">
+                {{ link.title }}
+              </a>
+            </div>
+          {%- else -%}
+            <a href="{{ link.url }}" class="header-nav__link"
+               {% if link.active %}aria-current="page"{% endif %}>
+              {{ link.title }}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+
+      {%- comment -%} Logo / Wordmark {%- endcomment -%}
+      <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name }} — Home">
+        <div class="header-logo__mark" aria-hidden="true">
+          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Buransh flower placeholder icon -->
+            <circle cx="9" cy="9" r="2" fill="#F0EDD0"/>
+            <path d="M9 2C9 2 10.5 5 9 7C7.5 5 9 2 9 2Z" fill="#F0EDD0" opacity="0.7"/>
+            <path d="M9 16C9 16 10.5 13 9 11C7.5 13 9 16 9 16Z" fill="#F0EDD0" opacity="0.7"/>
+            <path d="M2 9C2 9 5 10.5 7 9C5 7.5 2 9 2 9Z" fill="#F0EDD0" opacity="0.7"/>
+            <path d="M16 9C16 9 13 10.5 11 9C13 7.5 16 9 16 9Z" fill="#F0EDD0" opacity="0.7"/>
+            <path d="M3.5 3.5C3.5 3.5 6 5.5 5 7.5C3 6.5 3.5 3.5 3.5 3.5Z" fill="#F0EDD0" opacity="0.5"/>
+            <path d="M14.5 14.5C14.5 14.5 12 12.5 13 10.5C15 11.5 14.5 14.5 14.5 14.5Z" fill="#F0EDD0" opacity="0.5"/>
+            <path d="M14.5 3.5C14.5 3.5 12 5.5 13 7.5C15 6.5 14.5 3.5 14.5 3.5Z" fill="#F0EDD0" opacity="0.5"/>
+            <path d="M3.5 14.5C3.5 14.5 6 12.5 5 10.5C3 11.5 3.5 14.5 3.5 14.5Z" fill="#F0EDD0" opacity="0.5"/>
+          </svg>
+        </div>
+        {%- if section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 180 | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            class: 'header-logo__image',
+            alt: shop.name,
+            widths: '90, 180, 360'
+          }}
+        {%- else -%}
+          <span class="header-logo__wordmark">{{ shop.name | default: 'Buranshh' }}</span>
+        {%- endif -%}
+      </a>
+
+      {%- comment -%} Right icons {%- endcomment -%}
+      <div class="header-icons">
+        {%- comment -%} Search {%- endcomment -%}
+        <a href="{{ routes.search_url }}" class="header-icon" aria-label="Search">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8.5" cy="8.5" r="5.5"/>
+            <path d="M13 13l4 4" stroke-linecap="round"/>
+          </svg>
+        </a>
+
+        {%- comment -%} Wishlist {%- endcomment -%}
+        <a href="/pages/wishlist" class="header-icon" aria-label="Wishlist">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 17s-7-4.5-7-9A4 4 0 0110 5.5 4 4 0 0117 8c0 4.5-7 9-7 9z"/>
+          </svg>
+        </a>
+
+        {%- comment -%} Account {%- endcomment -%}
+        <a href="{{ routes.account_url }}" class="header-icon" aria-label="Account">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="7" r="3"/>
+            <path d="M4 17a6 6 0 0112 0"/>
+          </svg>
+        </a>
+
+        {%- comment -%} Cart {%- endcomment -%}
+        <button class="header-icon" data-cart-trigger aria-label="Open cart">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3h2l2.4 7.4a1 1 0 00.96.72h6.28a1 1 0 00.96-.72L17 7H5"/>
+            <circle cx="8" cy="17" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="15" cy="17" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span class="header-icon__badge" data-cart-count
+                style="display:{% if cart.item_count == 0 %}none{% else %}flex{% endif %}">
+            {{ cart.item_count }}
+          </span>
+        </button>
+
+        {%- comment -%} Mobile hamburger {%- endcomment -%}
+        <button class="header-mobile-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "site-header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement bar text",
+      "default": "Free shipping on orders above ₹1,999 · Handcrafted with care"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 80,
+      "max": 280,
+      "step": 10,
+      "default": 140,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Navigation menu"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

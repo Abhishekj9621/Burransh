@@ -1,0 +1,49 @@
+{% comment %}
+  BURANSHH — Search Results Section
+{% endcomment %}
+
+<section style="padding: var(--space-lg) 0 var(--space-xl);">
+  <div class="container">
+    <div class="section-label">Search</div>
+    <h1 style="font-family:var(--font-serif);font-size:clamp(32px,4.5vw,48px);font-weight:300;color:var(--color-bark);margin-bottom:32px;">
+      {%- if search.performed -%}
+        Results for "{{ search.terms }}"
+      {%- else -%}
+        Search Buranshh
+      {%- endif -%}
+    </h1>
+
+    <form action="{{ routes.search_url }}" method="get" style="max-width:480px;margin-bottom:48px;display:flex;gap:2px;">
+      <input type="search" name="q" value="{{ search.terms | escape }}"
+             placeholder="Search for products..."
+             class="newsletter__input"
+             style="background:var(--color-white);border-color:var(--color-border);color:var(--color-bark);">
+      <input type="hidden" name="type" value="product">
+      <button type="submit" class="btn btn--primary" style="border-radius:0;">Search</button>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:32px;">{{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} found</p>
+        <div class="product-grid" role="list">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {%- render 'product-card', product: item -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <p style="font-size:14px;color:var(--color-text-muted);">
+          No results found for "{{ search.terms }}". Try a different search term.
+        </p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Page",
+  "settings": []
+}
+{% endschema %}

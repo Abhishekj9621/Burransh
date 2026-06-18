@@ -1,0 +1,118 @@
+{% comment %}
+  BURANSHH — Product Card Snippet
+  Usage: {% render 'product-card', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign product_url = product.url
+  assign first_image = product.featured_image
+  assign hover_image = product.images[1]
+  assign price = product.price
+  assign compare_price = product.compare_at_price
+  assign is_on_sale = false
+  if compare_price > price
+    assign is_on_sale = true
+  endif
+  assign is_new = false
+  for tag in product.tags
+    if tag == 'new' or tag == 'New' or tag == 'new-arrival'
+      assign is_new = true
+    endif
+  endfor
+  assign is_sold_out = false
+  unless product.available
+    assign is_sold_out = true
+  endunless
+-%}
+
+<article class="product-card" role="listitem" data-product-id="{{ product.id }}">
+  <a href="{{ product_url }}" class="product-card__image-wrap" aria-label="{{ product.title | escape }}">
+
+    {%- comment -%} Badge {%- endcomment -%}
+    {%- if is_sold_out -%}
+      <span class="product-card__badge">Sold Out</span>
+    {%- elsif is_on_sale -%}
+      <span class="product-card__badge product-card__badge--red">Sale</span>
+    {%- elsif is_new -%}
+      <span class="product-card__badge product-card__badge--forest">New</span>
+    {%- endif -%}
+
+    {%- comment -%} Product image {%- endcomment -%}
+    {%- if first_image != blank -%}
+      {%- liquid
+        assign img_url = first_image | image_url: width: 800
+        assign img_alt = first_image.alt | default: product.title | escape
+        if hover_image != blank
+          assign hover_url = hover_image | image_url: width: 800
+        endif
+      -%}
+      {%- if hover_url != blank -%}
+        {{ img_url | image_tag:
+          class: 'product-card__image',
+          loading: 'lazy',
+          widths: '400, 600, 800',
+          sizes: '(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 25vw',
+          alt: img_alt,
+          data-hover-src: hover_url
+        }}
+      {%- else -%}
+        {{ img_url | image_tag:
+          class: 'product-card__image',
+          loading: 'lazy',
+          widths: '400, 600, 800',
+          sizes: '(max-width: 640px) 50vw, (max-width: 1100px) 33vw, 25vw',
+          alt: img_alt
+        }}
+      {%- endif -%}
+    {%- else -%}
+      <div class="product-card__image-placeholder">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="32" height="32" rx="2" stroke="#676A26" stroke-width="1"/>
+          <circle cx="24" cy="24" r="6" stroke="#676A26" stroke-width="1"/>
+          <path d="M24 14C24 14 27 18 24 21C21 18 24 14 24 14Z" fill="#676A26" opacity="0.4"/>
+          <path d="M24 34C24 34 27 30 24 27C21 30 24 34 24 34Z" fill="#676A26" opacity="0.4"/>
+        </svg>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Hover actions {%- endcomment -%}
+    {%- unless is_sold_out -%}
+      <div class="product-card__actions" aria-hidden="true">
+        <button class="product-card__action-btn product-card__action-btn--atc"
+                data-atc="{{ product.selected_or_first_available_variant.id }}"
+                tabindex="-1">
+          Add to Bag
+        </button>
+        <button class="product-card__action-btn product-card__action-btn--wish"
+                aria-label="Add {{ product.title | escape }} to wishlist"
+                tabindex="-1">
+          ♡ Save
+        </button>
+      </div>
+    {%- endunless -%}
+
+  </a>
+
+  <div class="product-card__info">
+    {%- if product.vendor != blank -%}
+      <p class="product-card__meta">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="product-card__name">
+      <a href="{{ product_url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="product-card__price">
+      <span class="product-card__price-current">
+        {%- if product.price_varies -%}
+          From {{ product.price_min | money }}
+        {%- else -%}
+          {{ product.price | money }}
+        {%- endif -%}
+      </span>
+      {%- if is_on_sale -%}
+        <span class="product-card__price-original">{{ compare_price | money }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,152 @@
+{% comment %}
+  BURANSHH — Brand Story Section
+  Dark bark background, image + content split layout
+{% endcomment %}
+
+<section class="brand-story" aria-labelledby="brand-story-heading-{{ section.id }}">
+  <div class="brand-story__bg-circle brand-story__bg-circle--1" aria-hidden="true"></div>
+  <div class="brand-story__bg-circle brand-story__bg-circle--2" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="brand-story__inner">
+
+      <div class="brand-story__content" data-reveal>
+        {%- if section.settings.label != blank -%}
+          <div class="section-label">{{ section.settings.label }}</div>
+        {%- endif -%}
+
+        <h2 id="brand-story-heading-{{ section.id }}" class="brand-story__heading">
+          {{ section.settings.heading | default: 'Made slowly.<br>Worn beautifully.' }}
+        </h2>
+
+        <p class="brand-story__body">{{ section.settings.body }}</p>
+
+        {%- if section.blocks.size > 0 -%}
+          <ul class="brand-story__values" aria-label="Our values">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'value' -%}
+                <li class="brand-story__value" {{ block.shopify_attributes }}>
+                  <div class="brand-story__value-line" aria-hidden="true"></div>
+                  <p class="brand-story__value-text">{{ block.settings.text }}</p>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.cta_label != blank -%}
+          <a href="{{ section.settings.cta_url }}" class="btn btn--light">
+            {{ section.settings.cta_label }}
+            <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M1 7h12M8 2l5 5-5 5"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="brand-story__image-wrap">
+        {%- if section.settings.image != blank -%}
+          {%- assign story_alt = section.settings.image.alt | default: 'Brand story image' -%}
+          {{ section.settings.image | image_url: width: 900
+            | image_tag:
+              class: 'brand-story__image',
+              loading: 'lazy',
+              widths: '450, 700, 900',
+              sizes: '(max-width: 900px) 100vw, 45vw',
+              alt: story_alt
+          }}
+        {%- else -%}
+          <div class="brand-story__image-placeholder">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="8" stroke="#F0EDD0" stroke-width="0.8"/>
+              <path d="M32 12C32 12 37 20 32 26C27 20 32 12 32 12Z" fill="#F0EDD0" opacity="0.3"/>
+              <path d="M32 52C32 52 37 44 32 38C27 44 32 52 32 52Z" fill="#F0EDD0" opacity="0.3"/>
+              <path d="M12 32C12 32 20 37 26 32C20 27 12 32 12 32Z" fill="#F0EDD0" opacity="0.3"/>
+              <path d="M52 32C52 32 44 37 38 32C44 27 52 32 52 32Z" fill="#F0EDD0" opacity="0.3"/>
+            </svg>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.image_caption != blank -%}
+          <div class="brand-story__image-caption">
+            <p class="brand-story__image-caption-text">{{ section.settings.image_caption }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section label",
+      "default": "Our Story"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Made slowly.<br>Worn beautifully.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body text",
+      "default": "Buranshh is named after the Buransh wildflower — bold, crimson-bloomed, mountain-born. Every piece we make carries that same quiet confidence: rooted in Himalayan craft, designed for the woman who moves through her life with intention."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_caption",
+      "label": "Image caption",
+      "default": "Handcrafted in the Himalayas"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA button label",
+      "default": "Read Our Story"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Brand value",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Value text",
+          "default": "Hand-stitched with care. Worn at the centre of your life."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story",
+      "blocks": [
+        { "type": "value", "settings": { "text": "Hand-stitched with care. Worn at the centre of your life." } },
+        { "type": "value", "settings": { "text": "Made slowly. Made to last." } },
+        { "type": "value", "settings": { "text": "Rooted in craft. Ready for wherever you are." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
