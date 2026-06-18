@@ -1,0 +1,137 @@
+<section class="brand-story section">
+
+  <div class="container">
+
+    <div class="brand-story-grid">
+
+      <div class="brand-story-content fade-up">
+
+        <p class="section-label">
+          {{ section.settings.label }}
+        </p>
+
+        <h2 class="section-title">
+          {{ section.settings.heading }}
+        </h2>
+
+        <div class="brand-story-text">
+          {{ section.settings.text }}
+        </div>
+
+      </div>
+
+      <div class="brand-story-image fade-up">
+
+        {% if section.settings.image %}
+          {{
+            section.settings.image
+            | image_url: width: 1400
+            | image_tag
+          }}
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+
+.brand-story-grid{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:100px;
+align-items:center;
+
+}
+
+.brand-story-text{
+
+font-size:18px;
+max-width:600px;
+
+}
+
+.brand-story-image{
+
+overflow:hidden;
+border-radius:4px;
+
+}
+
+.brand-story-image img{
+
+height:700px;
+object-fit:cover;
+transition:1.2s;
+
+}
+
+.brand-story-image:hover img{
+
+transform:scale(1.05);
+
+}
+
+@media(max-width:768px){
+
+.brand-story-grid{
+
+grid-template-columns:1fr;
+gap:50px;
+
+}
+
+.brand-story-image img{
+
+height:500px;
+
+}
+
+}
+
+</style>
+
+{% schema %}
+{
+  "name":"Brand Story",
+  "settings":[
+
+    {
+      "type":"text",
+      "id":"label",
+      "label":"Label",
+      "default":"Our Story"
+    },
+
+    {
+      "type":"text",
+      "id":"heading",
+      "label":"Heading",
+      "default":"Rooted In Culture. Worn Every Day."
+    },
+
+    {
+      "type":"richtext",
+      "id":"text",
+      "label":"Text"
+    },
+
+    {
+      "type":"image_picker",
+      "id":"image",
+      "label":"Image"
+    }
+
+  ],
+  "presets":[
+    {
+      "name":"Brand Story"
+    }
+  ]
+}
+{% endschema %}

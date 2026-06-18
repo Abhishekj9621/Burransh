@@ -1,10 +1,28 @@
 {
   "sections": {
+
     "hero": {
       "type": "hero"
+    },
+
+    "story": {
+      "type": "brand-story"
+    },
+
+    "collection": {
+      "type": "featured-collection"
+    },
+
+    "craftsmanship": {
+      "type": "craftsmanship"
     }
+
   },
+
   "order": [
-    "hero"
+    "hero",
+    "story",
+    "collection",
+    "craftsmanship"
   ]
 }

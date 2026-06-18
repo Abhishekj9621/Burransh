@@ -1,0 +1,149 @@
+<section class="craftsmanship">
+
+<div class="craftsmanship-grid">
+
+<div class="craft-image">
+
+{% if section.settings.image %}
+{{
+section.settings.image
+| image_url: width:2000
+| image_tag
+}}
+{% endif %}
+
+</div>
+
+<div class="craft-content">
+
+<p class="section-label">
+{{ section.settings.label }}
+</p>
+
+<h2>
+{{ section.settings.heading }}
+</h2>
+
+<p>
+{{ section.settings.text }}
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<style>
+
+.craftsmanship{
+
+background:var(--forest);
+
+color:var(--parchment);
+
+}
+
+.craftsmanship-grid{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+align-items:center;
+
+}
+
+.craft-image img{
+
+height:800px;
+
+object-fit:cover;
+
+}
+
+.craft-content{
+
+padding:100px;
+
+}
+
+.craft-content h2{
+
+font-size:72px;
+
+margin-bottom:30px;
+
+}
+
+.craft-content p{
+
+font-size:18px;
+
+}
+
+@media(max-width:768px){
+
+.craftsmanship-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.craft-content{
+
+padding:50px 25px;
+
+}
+
+.craft-content h2{
+
+font-size:44px;
+
+}
+
+}
+
+</style>
+
+{% schema %}
+{
+"name":"Craftsmanship",
+
+"settings":[
+
+{
+"type":"text",
+"id":"label",
+"default":"Craftsmanship",
+"label":"Label"
+},
+
+{
+"type":"text",
+"id":"heading",
+"default":"Made Slowly. Made To Last.",
+"label":"Heading"
+},
+
+{
+"type":"textarea",
+"id":"text",
+"label":"Text"
+},
+
+{
+"type":"image_picker",
+"id":"image",
+"label":"Image"
+}
+
+],
+
+"presets":[
+{
+"name":"Craftsmanship"
+}
+]
+}
+{% endschema %}
