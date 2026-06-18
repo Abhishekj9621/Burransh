@@ -45,46 +45,59 @@ closeCart?.addEventListener('click', () => {
 
 /* ── Mobile menu ── */
 
-const menuBtn   = document.getElementById('mobileMenuBtn');
+const menuBtn    = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.querySelector('#mobileMenu');
 const closeMenu  = document.querySelector('#closeMenu');
 
-menuBtn?.addEventListener('click', () => {
-  const isOpen = menuBtn.classList.contains('open');
-  menuBtn.classList.toggle('open');
-  mobileMenu?.classList.toggle('active');
-  menuBtn.setAttribute('aria-expanded', String(!isOpen));
-  document.body.style.overflow = isOpen ? '' : 'hidden';
-});
+function openMobileMenu() {
+  menuBtn?.classList.add('open');
+  mobileMenu?.classList.add('active');
+  menuBtn?.setAttribute('aria-expanded', 'true');
+  mobileMenu?.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
 
-closeMenu?.addEventListener('click', () => {
+function closeMobileMenu() {
   menuBtn?.classList.remove('open');
   mobileMenu?.classList.remove('active');
   menuBtn?.setAttribute('aria-expanded', 'false');
+  mobileMenu?.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+}
+
+menuBtn?.addEventListener('click', () => {
+  menuBtn.classList.contains('open') ? closeMobileMenu() : openMobileMenu();
 });
 
+closeMenu?.addEventListener('click', closeMobileMenu);
 
-/* ── Search modal ── */
 
-const searchBtn   = document.querySelector('.search-trigger');
-const searchModal  = document.querySelector('#searchModal');
-const closeSearch  = document.querySelector('#closeSearch');
+//* ── Search modal ── */
 
-searchBtn?.addEventListener('click', (e) => {
-  e.preventDefault();
-  searchModal?.classList.add('active');
-  searchModal?.querySelector('input')?.focus();
+const searchModal = document.querySelector('#searchModal');
+const searchInput = document.querySelector('#searchInput');
+const closeSearch = document.querySelector('#closeSearch');
+
+document.querySelectorAll('.search-trigger').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchModal?.classList.add('active');
+    setTimeout(() => searchInput?.focus(), 100);
+    document.body.style.overflow = 'hidden';
+  });
 });
 
 closeSearch?.addEventListener('click', () => {
   searchModal?.classList.remove('active');
+  document.body.style.overflow = '';
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     searchModal?.classList.remove('active');
+    closeMobileMenu();
     closeAllDropdowns();
+    document.body.style.overflow = '';
   }
 });
 

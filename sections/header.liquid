@@ -2,8 +2,9 @@
 
   <div class="container">
 
-    <div class="header-inner">
+    <div class="header-inner header-layout--{{ section.settings.logo_position }}">
 
+      {%- comment -%} ── Logo ── {%- endcomment -%}
       <a href="/" class="logo">
         {%- if section.settings.logo -%}
           {{
@@ -12,10 +13,11 @@
             | image_tag: loading: 'eager'
           }}
         {%- else -%}
-          BURANSHH
+          {{ shop.name | upcase }}
         {%- endif -%}
       </a>
 
+      {%- comment -%} ── Desktop Nav ── {%- endcomment -%}
       <nav class="desktop-nav" aria-label="Main navigation">
         {%- for link in linklists[section.settings.menu].links -%}
 
@@ -26,12 +28,14 @@
                 aria-expanded="false"
                 aria-haspopup="true"
               >
-                {{ link.title }}
+                {{- link.title -}}
                 <span class="nav-chevron" aria-hidden="true"></span>
               </button>
-              <div class="nav-dropdown" role="region">
+              <div class="nav-dropdown">
                 {%- for sub in link.links -%}
-                  <a href="{{ sub.url }}" class="nav-dropdown__link">{{ sub.title }}</a>
+                  <a href="{{ sub.url }}" class="nav-dropdown__link">
+                    {{- sub.title -}}
+                  </a>
                 {%- endfor -%}
               </div>
             </div>
@@ -40,10 +44,10 @@
             <div class="nav-item">
               
                 href="{{ link.url }}"
-                class="nav-link{%- if link.active %} nav-link--active{%- endif -%}"
-                {%- if link.active %} aria-current="page"{%- endif -%}
+                class="nav-link{% if link.active %} nav-link--active{% endif %}"
+                {% if link.active %}aria-current="page"{% endif %}
               >
-                {{ link.title }}
+                {{- link.title -}}
               </a>
             </div>
           {%- endif -%}
@@ -51,22 +55,35 @@
         {%- endfor -%}
       </nav>
 
+      {%- comment -%} ── Icons ── {%- endcomment -%}
       <div class="header-icons">
 
         {%- if section.settings.show_search -%}
           <a href="#" class="search-trigger header-icon-link" aria-label="Search">
-            Search
+            {%- if section.settings.icon_style == 'icons' -%}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            {%- else -%}
+              Search
+            {%- endif -%}
           </a>
         {%- endif -%}
 
         {%- if section.settings.show_account -%}
           <a href="/account" class="header-icon-link" aria-label="Account">
-            Account
+            {%- if section.settings.icon_style == 'icons' -%}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            {%- else -%}
+              Account
+            {%- endif -%}
           </a>
         {%- endif -%}
 
         <a href="#" class="cart-trigger header-icon-link" aria-label="Cart, {{ cart.item_count }} items">
-          Cart
+          {%- if section.settings.icon_style == 'icons' -%}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          {%- else -%}
+            Cart
+          {%- endif -%}
           {%- if cart.item_count > 0 -%}
             <span class="cart-count" aria-hidden="true">{{ cart.item_count }}</span>
           {%- endif -%}
@@ -74,6 +91,7 @@
 
       </div>
 
+      {%- comment -%} ── Hamburger ── {%- endcomment -%}
       <button
         class="mobile-menu-btn"
         id="mobileMenuBtn"
@@ -92,20 +110,91 @@
 
 </header>
 
+{%- comment -%} ── Mobile Menu ── {%- endcomment -%}
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true">
+  <div class="mobile-menu-inner">
+    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">&#x2715;</button>
+    {%- for link in linklists[section.settings.menu].links -%}
+      <a href="{{ link.url }}">{{- link.title -}}</a>
+    {%- endfor -%}
+    <div class="mobile-menu-secondary">
+      {%- if section.settings.show_search -%}
+        <a href="#" class="search-trigger">Search</a>
+      {%- endif -%}
+      {%- if section.settings.show_account -%}
+        <a href="/account">Account</a>
+      {%- endif -%}
+    </div>
+  </div>
+</nav>
+
+{%- comment -%} ── Search Modal ── {%- endcomment -%}
+{%- if section.settings.show_search -%}
+<div class="search-modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="search-inner">
+    <form action="/search" method="get">
+      <input
+        type="search"
+        name="q"
+        placeholder="Search Buranshh…"
+        autocomplete="off"
+        aria-label="Search"
+        id="searchInput"
+      >
+    </form>
+    <p class="search-hint">Press Enter to search</p>
+  </div>
+  <button class="search-close" id="closeSearch" aria-label="Close search">&#x2715; Close</button>
+</div>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Header",
   "settings": [
     {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo"
+      "label": "Logo image"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "Logo position",
+      "options": [
+        { "value": "left",   "label": "Left (nav centre)" },
+        { "value": "center", "label": "Centre (nav left)" },
+        { "value": "split",  "label": "Split (logo centre, nav sides)" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
     },
     {
       "type": "link_list",
       "id": "menu",
       "label": "Menu",
       "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "select",
+      "id": "icon_style",
+      "label": "Header icon style",
+      "options": [
+        { "value": "text",  "label": "Text labels" },
+        { "value": "icons", "label": "SVG icons" }
+      ],
+      "default": "text"
     },
     {
       "type": "checkbox",
@@ -118,6 +207,21 @@
       "id": "show_account",
       "label": "Show account link",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "header_border",
+      "label": "Bottom border on scroll",
+      "options": [
+        { "value": "none",  "label": "None" },
+        { "value": "line",  "label": "Thin line" },
+        { "value": "shadow","label": "Shadow (default)" }
+      ],
+      "default": "shadow"
     }
   ]
 }
