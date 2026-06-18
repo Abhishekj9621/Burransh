@@ -1,97 +1,86 @@
 <header class="site-header" id="siteHeader">
-
   <div class="container">
-
     <div class="header-inner header-layout--{{ section.settings.logo_position }}">
 
-      {%- comment -%} ── Logo ── {%- endcomment -%}
       <a href="/" class="logo">
-        {%- if section.settings.logo -%}
-          {{
-            section.settings.logo
-            | image_url: width: 400
-            | image_tag: loading: 'eager'
-          }}
-        {%- else -%}
+        {% if section.settings.logo %}
+          <img
+            src="{{ section.settings.logo | image_url: width: 400 }}"
+            alt="{{ shop.name }}"
+            loading="eager"
+            height="56"
+            width="auto"
+          >
+        {% else %}
           {{ shop.name | upcase }}
-        {%- endif -%}
+        {% endif %}
       </a>
 
-      {%- comment -%} ── Desktop Nav ── {%- endcomment -%}
       <nav class="desktop-nav" aria-label="Main navigation">
-        {%- for link in linklists[section.settings.menu].links -%}
-
-          {%- if link.links != blank -%}
+        {% assign nav_menu = linklists[section.settings.menu] %}
+        {% for link in nav_menu.links %}
+          {% if link.links != blank %}
             <div class="nav-item nav-item--dropdown">
-              <button
-                class="nav-dropdown-trigger"
-                aria-expanded="false"
-                aria-haspopup="true"
-              >
-                {{- link.title -}}
+              <button class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+                {{ link.title }}
                 <span class="nav-chevron" aria-hidden="true"></span>
               </button>
               <div class="nav-dropdown">
-                {%- for sub in link.links -%}
-                  <a href="{{ sub.url }}" class="nav-dropdown__link">
-                    {{- sub.title -}}
-                  </a>
-                {%- endfor -%}
+                {% for sub in link.links %}
+                  <a class="nav-dropdown__link" href="{{ sub.url }}">{{ sub.title }}</a>
+                {% endfor %}
               </div>
             </div>
-
-          {%- else -%}
+          {% else %}
             <div class="nav-item">
-              
-                href="{{ link.url }}"
-                class="nav-link{% if link.active %} nav-link--active{% endif %}"
-                {% if link.active %}aria-current="page"{% endif %}
-              >
-                {{- link.title -}}
-              </a>
+              {% if link.active %}
+                <a class="nav-link nav-link--active" href="{{ link.url }}" aria-current="page">{{ link.title }}</a>
+              {% else %}
+                <a class="nav-link" href="{{ link.url }}">{{ link.title }}</a>
+              {% endif %}
             </div>
-          {%- endif -%}
-
-        {%- endfor -%}
+          {% endif %}
+        {% endfor %}
       </nav>
 
-      {%- comment -%} ── Icons ── {%- endcomment -%}
       <div class="header-icons">
+        {% if section.settings.show_search %}
+          {% if section.settings.icon_style == 'icons' %}
+            <a href="#" class="search-trigger header-icon-link" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </a>
+          {% else %}
+            <a href="#" class="search-trigger header-icon-link">Search</a>
+          {% endif %}
+        {% endif %}
 
-        {%- if section.settings.show_search -%}
-          <a href="#" class="search-trigger header-icon-link" aria-label="Search">
-            {%- if section.settings.icon_style == 'icons' -%}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            {%- else -%}
-              Search
-            {%- endif -%}
+        {% if section.settings.show_account %}
+          {% if section.settings.icon_style == 'icons' %}
+            <a href="/account" class="header-icon-link" aria-label="Account">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </a>
+          {% else %}
+            <a href="/account" class="header-icon-link">Account</a>
+          {% endif %}
+        {% endif %}
+
+        {% if section.settings.icon_style == 'icons' %}
+          <a href="#" class="cart-trigger header-icon-link" aria-label="Cart">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            {% if cart.item_count > 0 %}
+              <span class="cart-count">{{ cart.item_count }}</span>
+            {% endif %}
           </a>
-        {%- endif -%}
-
-        {%- if section.settings.show_account -%}
-          <a href="/account" class="header-icon-link" aria-label="Account">
-            {%- if section.settings.icon_style == 'icons' -%}
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            {%- else -%}
-              Account
-            {%- endif -%}
-          </a>
-        {%- endif -%}
-
-        <a href="#" class="cart-trigger header-icon-link" aria-label="Cart, {{ cart.item_count }} items">
-          {%- if section.settings.icon_style == 'icons' -%}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          {%- else -%}
+        {% else %}
+          <a href="#" class="cart-trigger header-icon-link">
             Cart
-          {%- endif -%}
-          {%- if cart.item_count > 0 -%}
-            <span class="cart-count" aria-hidden="true">{{ cart.item_count }}</span>
-          {%- endif -%}
-        </a>
-
+            {% if cart.item_count > 0 %}
+              <span class="cart-count">{{ cart.item_count }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
       </div>
 
-      {%- comment -%} ── Hamburger ── {%- endcomment -%}
       <button
         class="mobile-menu-btn"
         id="mobileMenuBtn"
@@ -105,48 +94,45 @@
       </button>
 
     </div>
-
   </div>
-
 </header>
 
-{%- comment -%} ── Mobile Menu ── {%- endcomment -%}
-<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true">
+<nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
   <div class="mobile-menu-inner">
     <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">&#x2715;</button>
-    {%- for link in linklists[section.settings.menu].links -%}
-      <a href="{{ link.url }}">{{- link.title -}}</a>
-    {%- endfor -%}
+    {% assign nav_menu = linklists[section.settings.menu] %}
+    {% for link in nav_menu.links %}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {% endfor %}
     <div class="mobile-menu-secondary">
-      {%- if section.settings.show_search -%}
+      {% if section.settings.show_search %}
         <a href="#" class="search-trigger">Search</a>
-      {%- endif -%}
-      {%- if section.settings.show_account -%}
+      {% endif %}
+      {% if section.settings.show_account %}
         <a href="/account">Account</a>
-      {%- endif -%}
+      {% endif %}
     </div>
   </div>
 </nav>
 
-{%- comment -%} ── Search Modal ── {%- endcomment -%}
-{%- if section.settings.show_search -%}
+{% if section.settings.show_search %}
 <div class="search-modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Search">
   <div class="search-inner">
     <form action="/search" method="get">
       <input
         type="search"
         name="q"
+        id="searchInput"
         placeholder="Search Buranshh…"
         autocomplete="off"
         aria-label="Search"
-        id="searchInput"
       >
     </form>
     <p class="search-hint">Press Enter to search</p>
   </div>
-  <button class="search-close" id="closeSearch" aria-label="Close search">&#x2715; Close</button>
+  <button class="search-close" id="closeSearch">&#x2715; Close</button>
 </div>
-{%- endif -%}
+{% endif %}
 
 {% schema %}
 {
@@ -217,9 +203,9 @@
       "id": "header_border",
       "label": "Bottom border on scroll",
       "options": [
-        { "value": "none",  "label": "None" },
-        { "value": "line",  "label": "Thin line" },
-        { "value": "shadow","label": "Shadow (default)" }
+        { "value": "none",   "label": "None" },
+        { "value": "line",   "label": "Thin line" },
+        { "value": "shadow", "label": "Shadow (default)" }
       ],
       "default": "shadow"
     }
