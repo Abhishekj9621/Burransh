@@ -1,0 +1,135 @@
+<section class="newsletter">
+
+<div class="container">
+
+<div class="newsletter-inner">
+
+<p class="section-label">
+Stay Connected
+</p>
+
+<h2>
+Bloom In Your Own Season
+</h2>
+
+<p>
+Receive collection launches,
+editorials and stories.
+</p>
+
+{% form 'customer' %}
+
+<input
+type="email"
+name="contact[email]"
+placeholder="Your email address">
+
+<button type="submit">
+
+Subscribe
+
+</button>
+
+{% endform %}
+
+</div>
+
+</div>
+
+</section>
+
+<style>
+
+.newsletter{
+
+background:var(--forest);
+
+padding:120px 0;
+
+color:white;
+
+}
+
+.newsletter-inner{
+
+max-width:700px;
+
+margin:auto;
+
+text-align:center;
+
+}
+
+.newsletter h2{
+
+font-size:72px;
+
+margin-bottom:20px;
+
+}
+
+.newsletter form{
+
+display:flex;
+
+margin-top:40px;
+
+}
+
+.newsletter input{
+
+flex:1;
+
+padding:20px;
+
+border:none;
+
+outline:none;
+
+}
+
+.newsletter button{
+
+padding:20px 40px;
+
+background:var(--bark);
+
+border:none;
+
+color:white;
+
+cursor:pointer;
+
+}
+
+@media(max-width:768px){
+
+.newsletter h2{
+
+font-size:42px;
+
+}
+
+.newsletter form{
+
+flex-direction:column;
+
+gap:10px;
+
+}
+
+}
+
+</style>
+
+{% schema %}
+{
+"name":"Newsletter",
+
+"presets":[
+{
+"name":"Newsletter"
+}
+]
+}
+{% endschema %}

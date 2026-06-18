@@ -15,14 +15,29 @@
 
     "craftsmanship": {
       "type": "craftsmanship"
+    },
+
+    "image_story": {
+      "type": "image-story"
+    },
+
+    "testimonials": {
+      "type": "testimonials"
+    },
+
+    "newsletter": {
+      "type": "newsletter"
     }
 
-  },
+      },
 
   "order": [
     "hero",
     "story",
     "collection",
-    "craftsmanship"
+    "craftsmanship",
+    "image_story",
+    "testimonials",
+    "newsletter"
   ]
 }
