@@ -1,0 +1,49 @@
+<section class="about-mission">
+
+  <div class="container">
+
+    <div class="section-label">
+      {{ section.settings.label }}
+    </div>
+
+    <h2>
+      {{ section.settings.heading }}
+    </h2>
+
+    <div>
+      {{ section.settings.content }}
+    </div>
+
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "About Mission",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Our Mission"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "To uplift grassroots artisans"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Mission"
+    }
+  ]
+}
+{% endschema %}

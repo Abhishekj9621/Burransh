@@ -1,0 +1,51 @@
+<section class="about-hero">
+  <div class="container">
+
+    <div class="about-hero__content">
+
+      <div class="section-label">
+        {{ section.settings.label }}
+      </div>
+
+      <h1 class="about-hero__title">
+        {{ section.settings.heading }}
+      </h1>
+
+      <div class="about-hero__body">
+        {{ section.settings.intro }}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Section Label",
+      "default": "Our Story"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Bloom in your own season.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Hero"
+    }
+  ]
+}
+{% endschema %}

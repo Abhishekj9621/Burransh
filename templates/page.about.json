@@ -1,12 +1,26 @@
 {
   "sections": {
-    "main": {
-      "type": "about-page",
-      "settings": {
-        "heading": "<p>Bloom in your own season.</p>",
-        "intro": "Buranshh is a slow fashion clothing brand for women. Every piece is handcrafted, carefully curated, and designed to sit at the intersection of cultural craft and modern, everyday wearability."
-      }
+    "hero": {
+      "type": "about-hero"
+    },
+    "story": {
+      "type": "about-story"
+    },
+    "values": {
+      "type": "about-values"
+    },
+    "quote": {
+      "type": "about-quote"
+    },
+    "mission": {
+      "type": "about-mission"
     }
   },
-  "order": ["main"]
+  "order": [
+    "hero",
+    "story",
+    "values",
+    "quote",
+    "mission"
+  ]
 }
