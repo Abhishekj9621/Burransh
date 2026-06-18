@@ -1,0 +1,34 @@
+{% if recommendations.products_count > 0 %}
+
+<section class="section">
+
+<div class="container">
+
+<h2 class="section-title">
+
+You May Also Like
+
+</h2>
+
+<div class="product-grid">
+
+{% for product in recommendations.products limit:4 %}
+
+{% render 'product-card',
+product: product %}
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</section>
+
+{% endif %}
+
+{% schema %}
+{
+"name":"Product Recommendations"
+}
+{% endschema %}

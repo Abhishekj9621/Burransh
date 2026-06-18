@@ -1,0 +1,45 @@
+<div class="announcement-bar">
+
+  <div class="announcement-text">
+
+    {{ section.settings.text }}
+
+  </div>
+
+</div>
+
+<style>
+
+.announcement-bar{
+
+background:var(--forest);
+
+color:var(--parchment);
+
+padding:12px 20px;
+
+text-align:center;
+
+font-size:12px;
+
+letter-spacing:.15em;
+
+text-transform:uppercase;
+
+}
+
+</style>
+
+{% schema %}
+{
+  "name":"Announcement Bar",
+  "settings":[
+    {
+      "type":"text",
+      "id":"text",
+      "label":"Text",
+      "default":"Free Shipping Across India"
+    }
+  ]
+}
+{% endschema %}

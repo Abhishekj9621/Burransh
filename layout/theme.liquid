@@ -23,6 +23,8 @@ rel="stylesheet">
 
 <body>
 
+
+{% section 'announcement-bar' %}
 {% section 'header' %}
 
 <main>
@@ -32,6 +34,8 @@ rel="stylesheet">
 {% section 'footer' %}
 
 {{ 'theme.js' | asset_url | script_tag }}
+
+{% render 'search-modal' %}
 
 {% render 'mobile-menu' %}
 

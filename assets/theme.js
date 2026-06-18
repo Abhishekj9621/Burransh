@@ -82,3 +82,24 @@ closeMenu?.addEventListener('click',()=>{
 mobileMenu.classList.remove('active');
 
 });
+
+const searchBtn =
+document.querySelector('.search-trigger');
+
+const searchModal =
+document.querySelector('#searchModal');
+
+const closeSearch =
+document.querySelector('#closeSearch');
+
+searchBtn?.addEventListener('click',()=>{
+
+searchModal.classList.add('active');
+
+});
+
+closeSearch?.addEventListener('click',()=>{
+
+searchModal.classList.remove('active');
+
+});

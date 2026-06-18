@@ -1,25 +1,42 @@
 <a href="{{ product.url }}" class="product-card">
 
-<div class="product-card-image">
+  <div class="product-image-hover">
 
-{{
-product.featured_image
-| image_url: width:1000
-| image_tag
-}}
+    {% if product.images.size > 1 %}
 
-</div>
+      {{
+        product.images[0]
+        | image_url: width: 1000
+        | image_tag:
+        class: 'primary-image'
+      }}
 
-<div class="product-card-info">
+      {{
+        product.images[1]
+        | image_url: width: 1000
+        | image_tag:
+        class: 'secondary-image'
+      }}
 
-<h3>
-{{ product.title }}
-</h3>
+    {% else %}
 
-<p>
-{{ product.price | money }}
-</p>
+      {{
+        product.featured_image
+        | image_url: width: 1000
+        | image_tag:
+        class: 'primary-image'
+      }}
 
-</div>
+    {% endif %}
+
+  </div>
+
+  <div class="product-info">
+
+    <h3>{{ product.title }}</h3>
+
+    <p>{{ product.price | money }}</p>
+
+  </div>
 
 </a>
