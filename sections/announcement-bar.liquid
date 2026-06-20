@@ -1,48 +1,380 @@
-{{ 'component-announcement-bar.css' | asset_url | stylesheet_tag }}
+{{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'announcement-bar.js' | asset_url }}" defer></script>
 
-<div
-  class="announcement-bar"
+{% liquid
+  assign show_section = true
+
+  if section.settings.homepage_only and request.page_type != 'index'
+    assign show_section = false
+  endif
+%}
+
+{% if show_section %}
+
+<section
+  id="shopify-section-{{ section.id }}"
+  class="announcement-bar {% if section.settings.sticky %}announcement-bar--sticky{% endif %}"
+  data-announcement-bar
+  data-mode="{{ section.settings.mode }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-speed="{{ section.settings.autoplay_speed | times: 1000 }}"
+  data-pause-hover="{{ section.settings.pause_on_hover }}"
   style="
-    background:{{ section.settings.background }};
-    color:{{ section.settings.text_color }};
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
+    --announcement-height: {{ section.settings.height }}px;
+    --announcement-font-size: {{ section.settings.font_size }}px;
+    border-bottom:
+      {{ section.settings.border_width }}px
+      solid
+      {{ section.settings.border_color }};
   "
 >
 
-  <div class="page-width">
+  <div class="announcement-bar__container">
 
-    <div class="announcement-bar__inner">
+    {% if section.settings.mode == 'slider' %}
 
-      <span class="announcement-bar__text">
-        {{ section.settings.text }}
-      </span>
+      {% if section.blocks.size > 1 %}
 
-    </div>
+        <button
+          class="announcement-nav announcement-nav--prev"
+          data-announcement-prev
+          aria-label="Previous announcement"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button
+          class="announcement-nav announcement-nav--next"
+          data-announcement-next
+          aria-label="Next announcement"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M9 18L15 12L9 6"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+      {% endif %}
+
+      {% if section.settings.show_close %}
+
+        <button
+          class="announcement-close"
+          data-announcement-close
+          aria-label="Close announcement bar"
+        >
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M18 6L6 18M6 6L18 18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+
+      {% endif %}
+
+      <div class="announcement-slider">
+
+        <div class="announcement-slider__track">
+
+          {% for block in section.blocks %}
+
+            <div
+              class="announcement-slide"
+              {{ block.shopify_attributes }}
+            >
+
+              {% assign announcement_link = block.settings.link %}
+
+              {% if announcement_link != blank %}
+                <a
+                  href="{{ announcement_link }}"
+                  class="announcement-slide__link"
+                >
+              {% else %}
+                <div class="announcement-slide__link">
+              {% endif %}
+
+                {% if block.settings.show_icon %}
+
+                  <span class="announcement-slide__icon">
+
+                    {% if block.settings.custom_icon != blank %}
+
+                      {{
+                        block.settings.custom_icon
+                        | image_url: width: 40
+                        | image_tag
+                      }}
+
+                    {% else %}
+
+                      ✦
+
+                    {% endif %}
+
+                  </span>
+
+                {% endif %}
+
+                <span class="announcement-slide__text">
+
+                  <span class="announcement-desktop">
+
+                    {{ block.settings.desktop_text }}
+
+                  </span>
+
+                  <span class="announcement-mobile">
+
+                    {{ block.settings.mobile_text }}
+
+                  </span>
+
+                </span>
+
+              {% if announcement_link != blank %}
+                </a>
+              {% else %}
+                </div>
+              {% endif %}
+
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+      {% if section.settings.show_progress %}
+
+        <div class="announcement-progress">
+
+          <div class="announcement-progress__bar"></div>
+
+        </div>
+
+      {% endif %}
+
+    {% else %}
+
+      <div class="announcement-marquee">
+
+        <div class="announcement-marquee__track">
+
+          {% for i in (1..3) %}
+
+            {% for block in section.blocks %}
+
+              <div class="announcement-marquee__item">
+
+                {% if block.settings.show_icon %}
+                  ✦
+                {% endif %}
+
+                <span>
+                  {{ block.settings.desktop_text }}
+                </span>
+
+                <span class="announcement-marquee__divider">
+                  •
+                </span>
+
+              </div>
+
+            {% endfor %}
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    {% endif %}
 
   </div>
 
-</div>
+</section>
+
+{% endif %}
 
 {% schema %}
 {
-  "name":"Announcement Bar",
-  "settings":[
+  "name": "Luxury Announcement Bar",
+  "class": "section-announcement-bar",
+  "settings": [
     {
-      "type":"text",
-      "id":"text",
-      "label":"Text",
-      "default":"Rooted in Culture. Worn Every Day."
+      "type": "select",
+      "id": "mode",
+      "label": "Mode",
+      "options": [
+        {
+          "value": "slider",
+          "label": "Slider"
+        },
+        {
+          "value": "marquee",
+          "label": "Marquee"
+        }
+      ],
+      "default": "slider"
     },
     {
-      "type":"color",
-      "id":"background",
-      "label":"Background",
-      "default":"#676A26"
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky Bar",
+      "default": false
     },
     {
-      "type":"color",
-      "id":"text_color",
-      "label":"Text Color",
-      "default":"#F0EDD0"
+      "type": "checkbox",
+      "id": "homepage_only",
+      "label": "Homepage Only",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause On Hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay Speed",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "label": "Show Progress Bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close",
+      "label": "Show Close Button",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 40,
+      "max": 80,
+      "step": 2,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#676A26"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#F0EDD0"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border Width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#898C44"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "desktop_text",
+          "label": "Desktop Text",
+          "default": "Rooted In Culture. Worn Every Day."
+        },
+        {
+          "type": "text",
+          "id": "mobile_text",
+          "label": "Mobile Text",
+          "default": "Rooted In Culture"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show Icon",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom Icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury Announcement Bar",
+      "blocks": [
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        },
+        {
+          "type": "announcement"
+        }
+      ]
     }
   ]
 }
