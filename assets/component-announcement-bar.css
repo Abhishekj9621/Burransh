@@ -118,18 +118,16 @@
    ========================================================== */
 
 .announcement-marquee{
-  position:relative;
   overflow:hidden;
-  width:100%;
+  white-space:nowrap;
 }
 
 .announcement-marquee__track{
-  display:flex;
+  display:inline-flex;
+  flex-wrap:nowrap;
   align-items:center;
   white-space:nowrap;
   width:max-content;
-
-  animation:announcement-marquee 28s linear infinite;
 }
 
 .announcement-marquee:hover
