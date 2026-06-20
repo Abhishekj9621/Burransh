@@ -1,0 +1,162 @@
+{{ 'component-hero-editorial.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="hero-editorial"
+  style="
+    background:{{ section.settings.background }};
+  "
+>
+
+<div class="hero-editorial__wrapper">
+
+<div class="hero-editorial__media">
+
+{% if section.settings.hero_image != blank %}
+
+{{
+section.settings.hero_image
+| image_url: width: 2500
+| image_tag:
+loading: 'eager',
+sizes: '100vw'
+}}
+
+{% endif %}
+
+</div>
+
+<div class="hero-editorial__content">
+
+<div class="hero-editorial__inner">
+
+{% if section.settings.eyebrow != blank %}
+
+<div class="hero-eyebrow">
+{{ section.settings.eyebrow }}
+</div>
+
+{% endif %}
+
+<h1 class="hero-heading">
+
+{{ section.settings.heading }}
+
+</h1>
+
+<div class="hero-text">
+
+{{ section.settings.description }}
+
+</div>
+
+<div class="hero-buttons">
+
+{% if section.settings.button_label != blank %}
+
+<a
+href="{{ section.settings.button_link }}"
+class="hero-btn hero-btn--primary"
+>
+
+{{ section.settings.button_label }}
+
+</a>
+
+{% endif %}
+
+{% if section.settings.button_label_2 != blank %}
+
+<a
+href="{{ section.settings.button_link_2 }}"
+class="hero-btn hero-btn--secondary"
+>
+
+{{ section.settings.button_label_2 }}
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% schema %}
+{
+  "name":"Editorial Hero",
+  "settings":[
+
+    {
+      "type":"image_picker",
+      "id":"hero_image",
+      "label":"Hero Image"
+    },
+
+    {
+      "type":"text",
+      "id":"eyebrow",
+      "label":"Eyebrow",
+      "default":"Slow Fashion • Handcrafted • Nature Inspired"
+    },
+
+    {
+      "type":"textarea",
+      "id":"heading",
+      "label":"Heading",
+      "default":"Bloom In Your Own Season"
+    },
+
+    {
+      "type":"richtext",
+      "id":"description",
+      "label":"Description"
+    },
+
+    {
+      "type":"text",
+      "id":"button_label",
+      "label":"Primary Button",
+      "default":"Shop Collection"
+    },
+
+    {
+      "type":"url",
+      "id":"button_link",
+      "label":"Primary Link"
+    },
+
+    {
+      "type":"text",
+      "id":"button_label_2",
+      "label":"Secondary Button",
+      "default":"Our Story"
+    },
+
+    {
+      "type":"url",
+      "id":"button_link_2",
+      "label":"Secondary Link"
+    },
+
+    {
+      "type":"color",
+      "id":"background",
+      "label":"Background",
+      "default":"#FAF8EF"
+    }
+
+  ],
+
+  "presets":[
+    {
+      "name":"Editorial Hero"
+    }
+  ]
+}
+{% endschema %}
