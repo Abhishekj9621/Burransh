@@ -4,11 +4,22 @@
 <header
   class="header
   {% if section.settings.sticky_header %}header--sticky{% endif %}
+  {% if section.settings.transparent_header %}header--transparent{% endif %}
   {% if section.settings.show_border %}header--border{% endif %}"
   data-header-section
   style="
     --header-bg: {{ section.settings.background_color }};
     --header-text: {{ section.settings.text_color }};
+
+    --header-container-width: {{ section.settings.container_width }}px;
+
+    --header-height-desktop: {{ section.settings.header_height_desktop }}px;
+    --header-height-mobile: {{ section.settings.header_height_mobile }}px;
+
+    --header-logo-width-desktop: {{ section.settings.logo_width_desktop }}px;
+    --header-logo-width-mobile: {{ section.settings.logo_width_mobile }}px;
+
+    --header-menu-gap: {{ section.settings.menu_gap }}px;
   "
 >
 
@@ -16,12 +27,12 @@
 
     <div class="header__inner">
 
-      <!-- MOBILE MENU BUTTON -->
+      <!-- MOBILE TOGGLE -->
 
       <button
         class="header__toggle"
-        aria-label="Open Menu"
         data-header-toggle
+        aria-label="Open menu"
       >
 
         <svg
@@ -48,19 +59,20 @@
             stroke-width="1.5"
             stroke-linecap="round"
           />
-
         </svg>
 
       </button>
 
-      <!-- LEFT NAVIGATION -->
+      <!-- LEFT NAV -->
 
       <nav
         class="header__nav-left"
-        aria-label="Primary Navigation"
+        aria-label="Main navigation"
       >
 
-        {% for link in linklists[section.settings.menu].links limit: 2 %}
+        {% assign menu_links = linklists[section.settings.menu].links %}
+
+        {% for link in menu_links limit:2 %}
 
           <a
             href="{{ link.url }}"
@@ -88,7 +100,6 @@
               section.settings.logo
               | image_url: width: 600
               | image_tag:
-                widths: '120,180,240,300,360',
                 class: 'header__logo-image',
                 loading: 'eager'
             }}
@@ -96,9 +107,7 @@
           {% else %}
 
             <span class="header__logo-text">
-
               {{ shop.name }}
-
             </span>
 
           {% endif %}
@@ -107,17 +116,11 @@
 
       </div>
 
-      <!-- RIGHT NAVIGATION -->
+      <!-- RIGHT NAV -->
 
-      <div
-        class="header__nav-right"
-      >
+      <div class="header__nav-right">
 
-        {% assign total_links =
-          linklists[section.settings.menu].links.size
-        %}
-
-        {% for link in linklists[section.settings.menu].links offset:2 %}
+        {% for link in menu_links offset:2 %}
 
           <a
             href="{{ link.url }}"
@@ -127,6 +130,17 @@
           </a>
 
         {% endfor %}
+
+        {% if section.settings.show_cta %}
+
+          <a
+            href="{{ section.settings.cta_link }}"
+            class="header__cta"
+          >
+            {{ section.settings.cta_text }}
+          </a>
+
+        {% endif %}
 
         <div class="header__icons">
 
@@ -142,7 +156,6 @@
                 viewBox="0 0 24 24"
                 fill="none"
               >
-
                 <circle
                   cx="11"
                   cy="11"
@@ -157,7 +170,6 @@
                   stroke-width="1.5"
                   stroke-linecap="round"
                 />
-
               </svg>
 
             </a>
@@ -176,7 +188,6 @@
                 viewBox="0 0 24 24"
                 fill="none"
               >
-
                 <circle
                   cx="12"
                   cy="8"
@@ -191,7 +202,6 @@
                   stroke-width="1.5"
                   stroke-linecap="round"
                 />
-
               </svg>
 
             </a>
@@ -210,7 +220,6 @@
                 viewBox="0 0 24 24"
                 fill="none"
               >
-
                 <path
                   d="M6 7H20L18.5 15H8"
                   stroke="currentColor"
@@ -231,8 +240,15 @@
                   r="1"
                   fill="currentColor"
                 />
-
               </svg>
+
+              {% if cart.item_count > 0 %}
+
+                <span class="header__cart-count">
+                  {{ cart.item_count }}
+                </span>
+
+              {% endif %}
 
             </a>
 
@@ -248,27 +264,21 @@
 
   <!-- MOBILE DRAWER -->
 
-  <div
-    class="header-drawer"
-  >
+  <div class="header-drawer">
 
     <button
       class="header-drawer__close"
-      aria-label="Close Menu"
       data-header-close
+      aria-label="Close menu"
     >
       ×
     </button>
 
-    <div
-      class="header-drawer__inner"
-    >
+    <div class="header-drawer__inner">
 
-      <nav
-        class="header-drawer__nav"
-      >
+      <nav class="header-drawer__nav">
 
-        {% for link in linklists[section.settings.menu].links %}
+        {% for link in menu_links %}
 
           <a
             href="{{ link.url }}"
@@ -280,6 +290,28 @@
         {% endfor %}
 
       </nav>
+
+      <div class="header-drawer__bottom">
+
+        {% if shop.customer_accounts_enabled %}
+
+          <a
+            href="{{ routes.account_url }}"
+            class="header__link"
+          >
+            Account
+          </a>
+
+        {% endif %}
+
+        <a
+          href="{{ routes.search_url }}"
+          class="header__link"
+        >
+          Search
+        </a>
+
+      </div>
 
     </div>
 
@@ -307,6 +339,76 @@
     },
 
     {
+      "type": "header",
+      "content": "Logo"
+    },
+
+    {
+      "type": "range",
+      "id": "logo_width_desktop",
+      "label": "Desktop Logo Width",
+      "min": 80,
+      "max": 300,
+      "step": 10,
+      "default": 180
+    },
+
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Mobile Logo Width",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "default": 120
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container Width",
+      "min": 1200,
+      "max": 1800,
+      "step": 50,
+      "default": 1600
+    },
+
+    {
+      "type": "range",
+      "id": "header_height_desktop",
+      "label": "Desktop Height",
+      "min": 70,
+      "max": 140,
+      "step": 5,
+      "default": 90
+    },
+
+    {
+      "type": "range",
+      "id": "header_height_mobile",
+      "label": "Mobile Height",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "default": 74
+    },
+
+    {
+      "type": "range",
+      "id": "menu_gap",
+      "label": "Menu Gap",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "default": 32
+    },
+
+    {
       "type": "checkbox",
       "id": "sticky_header",
       "label": "Sticky Header",
@@ -315,9 +417,21 @@
 
     {
       "type": "checkbox",
+      "id": "transparent_header",
+      "label": "Transparent Header",
+      "default": false
+    },
+
+    {
+      "type": "checkbox",
       "id": "show_border",
-      "label": "Bottom Border",
+      "label": "Show Border",
       "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Icons"
     },
 
     {
@@ -342,6 +456,36 @@
     },
 
     {
+      "type": "header",
+      "content": "CTA Button"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show CTA",
+      "default": false
+    },
+
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Text",
+      "default": "Shop Now"
+    },
+
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Link"
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+
+    {
       "type": "color",
       "id": "background_color",
       "label": "Background",
@@ -351,7 +495,7 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text Color",
+      "label": "Text",
       "default": "#3C3F14"
     }
 
