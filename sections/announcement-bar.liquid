@@ -1,62 +1,115 @@
 {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
 
+{% liquid
+assign bar_class = ''
+
+case section.settings.alignment
+when 'left'
+assign bar_class = 'announcement-bar--left'
+when 'right'
+assign bar_class = 'announcement-bar--right'
+else
+assign bar_class = 'announcement-bar--center'
+endcase
+
+unless section.settings.show_mobile
+assign bar_class = bar_class | append: ' announcement-bar--hide-mobile'
+endunless
+
+unless section.settings.show_desktop
+assign bar_class = bar_class | append: ' announcement-bar--hide-desktop'
+endunless
+%}
+
 <section
-  class="announcement-bar"
+  class="announcement-bar {{ bar_class }}"
   style="
     background: {{ section.settings.background }};
     color: {{ section.settings.text_color }};
-    --announcement-height: {{ section.settings.height }}px;
-    --announcement-font-size: {{ section.settings.font_size }}px;
 
-    {% if section.settings.show_border %}
-      border-bottom: 1px solid rgba(255,255,255,.12);
-    {% endif %}
-  "
+--announcement-height: {{ section.settings.height }}px;
+--announcement-font-size: {{ section.settings.font_size }}px;
+--announcement-width: {{ section.settings.container_width }}px;
+--announcement-letter-spacing: {{ section.settings.letter_spacing | times: 0.01 }}em;
+
+{% if section.settings.show_border %}
+  border-bottom: 1px solid rgba(255,255,255,.12);
+{% endif %}
+
+"
+
 >
 
   <div class="announcement-bar__container">
 
-    <div class="announcement-bar__inner">
+<div class="announcement-bar__inner">
 
-      {% if section.settings.show_lines %}
-        <span class="announcement-bar__line"></span>
+  {% if section.settings.show_lines %}
+    <span class="announcement-bar__line"></span>
+  {% endif %}
+
+  {% if section.settings.show_icon %}
+    <span class="announcement-bar__icon">
+      ✦
+    </span>
+  {% endif %}
+
+  <div class="announcement-bar__content">
+
+    {% for block in section.blocks %}
+
+      {% if block.settings.link != blank %}
+        <a
+          href="{{ block.settings.link }}"
+          class="announcement-bar__link"
+          {{ block.shopify_attributes }}
+        >
       {% endif %}
 
-      {% if section.settings.show_icon %}
-        <span class="announcement-bar__icon">
-          ✦
-        </span>
-      {% endif %}
-
-      <div class="announcement-bar__text">
+      <div
+        class="announcement-bar__text
+        {% if section.settings.uppercase %}
+          announcement-bar__text--uppercase
+        {% endif %}"
+      >
 
         <span class="announcement-desktop">
-          {{ section.settings.text }}
+
+          {{ block.settings.desktop_text }}
+
         </span>
 
         <span class="announcement-mobile">
 
-          {% if section.settings.mobile_text != blank %}
-            {{ section.settings.mobile_text }}
+          {% if block.settings.mobile_text != blank %}
+            {{ block.settings.mobile_text }}
           {% else %}
-            {{ section.settings.text }}
+            {{ block.settings.desktop_text }}
           {% endif %}
 
         </span>
 
       </div>
 
-      {% if section.settings.show_icon %}
-        <span class="announcement-bar__icon">
-          ✦
-        </span>
+      {% if block.settings.link != blank %}
+        </a>
       {% endif %}
 
-      {% if section.settings.show_lines %}
-        <span class="announcement-bar__line"></span>
-      {% endif %}
+    {% endfor %}
 
-    </div>
+  </div>
+
+  {% if section.settings.show_icon %}
+    <span class="announcement-bar__icon">
+      ✦
+    </span>
+  {% endif %}
+
+  {% if section.settings.show_lines %}
+    <span class="announcement-bar__line"></span>
+  {% endif %}
+
+</div>
 
   </div>
 
@@ -64,73 +117,147 @@
 
 {% schema %}
 {
-  "name": "Announcement Bar",
-  "settings": [
-    {
-      "type": "text",
-      "id": "text",
-      "label": "Desktop Text",
-      "default": "Rooted In Culture • Worn Every Day"
-    },
-    {
-      "type": "text",
-      "id": "mobile_text",
-      "label": "Mobile Text",
-      "default": "Rooted In Culture"
-    },
-    {
-      "type": "color",
-      "id": "background",
-      "label": "Background Color",
-      "default": "#676A26"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text Color",
-      "default": "#F0EDD0"
-    },
-    {
-      "type": "range",
-      "id": "height",
-      "label": "Height",
-      "min": 32,
-      "max": 60,
-      "step": 2,
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "font_size",
-      "label": "Font Size",
-      "min": 9,
-      "max": 16,
-      "step": 1,
-      "default": 11
-    },
-    {
-      "type": "checkbox",
-      "id": "show_icon",
-      "label": "Show Decorative Icons",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_lines",
-      "label": "Show Decorative Lines",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_border",
-      "label": "Show Bottom Border",
-      "default": true
-    }
-  ],
-  "presets": [
-    {
-      "name": "Announcement Bar"
-    }
-  ]
+"name": "Announcement Bar",
+"settings": [
+{
+"type": "color",
+"id": "background",
+"label": "Background Color",
+"default": "#676A26"
+},
+{
+"type": "color",
+"id": "text_color",
+"label": "Text Color",
+"default": "#F0EDD0"
+},
+{
+"type": "range",
+"id": "height",
+"label": "Height",
+"min": 32,
+"max": 80,
+"step": 2,
+"default": 40
+},
+{
+"type": "range",
+"id": "font_size",
+"label": "Font Size",
+"min": 9,
+"max": 18,
+"step": 1,
+"default": 11
+},
+{
+"type": "range",
+"id": "container_width",
+"label": "Container Width",
+"min": 1000,
+"max": 1800,
+"step": 50,
+"default": 1600
+},
+{
+"type": "range",
+"id": "letter_spacing",
+"label": "Letter Spacing",
+"min": 0,
+"max": 30,
+"step": 1,
+"default": 22
+},
+{
+"type": "select",
+"id": "alignment",
+"label": "Alignment",
+"options": [
+{
+"value": "left",
+"label": "Left"
+},
+{
+"value": "center",
+"label": "Center"
+},
+{
+"value": "right",
+"label": "Right"
+}
+],
+"default": "center"
+},
+{
+"type": "checkbox",
+"id": "uppercase",
+"label": "Uppercase Text",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_icon",
+"label": "Show Decorative Icons",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_lines",
+"label": "Show Decorative Lines",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_border",
+"label": "Show Bottom Border",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_mobile",
+"label": "Show On Mobile",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "show_desktop",
+"label": "Show On Desktop",
+"default": true
+}
+],
+"blocks": [
+{
+"type": "announcement",
+"name": "Announcement",
+"settings": [
+{
+"type": "text",
+"id": "desktop_text",
+"label": "Desktop Text",
+"default": "Rooted In Culture • Worn Every Day"
+},
+{
+"type": "text",
+"id": "mobile_text",
+"label": "Mobile Text",
+"default": "Rooted In Culture"
+},
+{
+"type": "url",
+"id": "link",
+"label": "Link"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Announcement Bar",
+"blocks": [
+{
+"type": "announcement"
+}
+]
+}
+]
 }
 {% endschema %}
