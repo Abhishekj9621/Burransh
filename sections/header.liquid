@@ -1,78 +1,244 @@
-{{ 'component-header.css' | asset_url | stylesheet_tag }}
+{{ 'header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'header.js' | asset_url }}" defer></script>
 
-<header class="site-header">
+<header
+  class="header
+  {% if section.settings.sticky_header %}header--sticky{% endif %}
+  {% if section.settings.show_border %}header--border{% endif %}"
+  data-header-section
+  style="
+    --header-bg: {{ section.settings.background_color }};
+    --header-text: {{ section.settings.text_color }};
+  "
+>
 
-  <div class="page-width">
+  <div class="header__container">
 
-    <div class="header-wrapper">
+    <div class="header__inner">
 
-      <div class="header-left">
+      <!-- MOBILE MENU BUTTON -->
 
-        <button class="mobile-toggle">
+      <button
+        class="header__toggle"
+        aria-label="Open Menu"
+        data-header-toggle
+      >
 
-          ☰
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M4 7H20"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
 
-        </button>
+          <path
+            d="M4 12H20"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
 
-        <nav class="header-nav">
+          <path
+            d="M4 17H20"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
 
-          {% for link in linklists[section.settings.menu].links %}
+        </svg>
 
-            <a href="{{ link.url }}">
-              {{ link.title }}
-            </a>
+      </button>
 
-          {% endfor %}
+      <!-- LEFT NAVIGATION -->
 
-        </nav>
+      <nav
+        class="header__nav-left"
+        aria-label="Primary Navigation"
+      >
 
-      </div>
+        {% for link in linklists[section.settings.menu].links limit: 2 %}
 
-      <div class="header-logo">
+          <a
+            href="{{ link.url }}"
+            class="header__link"
+          >
+            {{ link.title }}
+          </a>
 
-        {% if settings.logo %}
+        {% endfor %}
 
-          <a href="/">
+      </nav>
+
+      <!-- LOGO -->
+
+      <div class="header__logo">
+
+        <a
+          href="{{ routes.root_url }}"
+          class="header__logo-link"
+        >
+
+          {% if section.settings.logo != blank %}
 
             {{
-              settings.logo
+              section.settings.logo
               | image_url: width: 600
               | image_tag:
-              widths: '200,300,400,600',
-              style: 'max-width:' | append: settings.logo_width | append: 'px'
+                widths: '120,180,240,300,360',
+                class: 'header__logo-image',
+                loading: 'eager'
             }}
 
-          </a>
+          {% else %}
 
-        {% else %}
+            <span class="header__logo-text">
 
-          <a href="/">
-            Buranshh
-          </a>
+              {{ shop.name }}
 
-        {% endif %}
+            </span>
+
+          {% endif %}
+
+        </a>
 
       </div>
 
-      <div class="header-icons">
+      <!-- RIGHT NAVIGATION -->
 
-        <a href="/search">
+      <div
+        class="header__nav-right"
+      >
 
-          🔍
+        {% assign total_links =
+          linklists[section.settings.menu].links.size
+        %}
 
-        </a>
+        {% for link in linklists[section.settings.menu].links offset:2 %}
 
-        <a href="/account">
+          <a
+            href="{{ link.url }}"
+            class="header__link"
+          >
+            {{ link.title }}
+          </a>
 
-          👤
+        {% endfor %}
 
-        </a>
+        <div class="header__icons">
 
-        <a href="/cart">
+          {% if section.settings.show_search %}
 
-          👜
+            <a
+              href="{{ routes.search_url }}"
+              class="header__icon"
+              aria-label="Search"
+            >
 
-        </a>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="7"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+
+                <path
+                  d="M20 20L17 17"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+
+              </svg>
+
+            </a>
+
+          {% endif %}
+
+          {% if section.settings.show_account %}
+
+            <a
+              href="{{ routes.account_url }}"
+              class="header__icon"
+              aria-label="Account"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+
+                <path
+                  d="M5 20C5 16.5 8 14 12 14C16 14 19 16.5 19 20"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+
+              </svg>
+
+            </a>
+
+          {% endif %}
+
+          {% if section.settings.show_cart %}
+
+            <a
+              href="{{ routes.cart_url }}"
+              class="header__icon"
+              aria-label="Cart"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+
+                <path
+                  d="M6 7H20L18.5 15H8"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                />
+
+                <circle
+                  cx="9"
+                  cy="19"
+                  r="1"
+                  fill="currentColor"
+                />
+
+                <circle
+                  cx="17"
+                  cy="19"
+                  r="1"
+                  fill="currentColor"
+                />
+
+              </svg>
+
+            </a>
+
+          {% endif %}
+
+        </div>
 
       </div>
 
@@ -80,50 +246,120 @@
 
   </div>
 
-  <div class="mobile-menu">
+  <!-- MOBILE DRAWER -->
 
-    <nav>
+  <div
+    class="header-drawer"
+  >
 
-      {% for link in linklists[section.settings.menu].links %}
+    <button
+      class="header-drawer__close"
+      aria-label="Close Menu"
+      data-header-close
+    >
+      ×
+    </button>
 
-        <a href="{{ link.url }}">
-          {{ link.title }}
-        </a>
+    <div
+      class="header-drawer__inner"
+    >
 
-      {% endfor %}
+      <nav
+        class="header-drawer__nav"
+      >
 
-    </nav>
+        {% for link in linklists[section.settings.menu].links %}
+
+          <a
+            href="{{ link.url }}"
+            class="header-drawer__link"
+          >
+            {{ link.title }}
+          </a>
+
+        {% endfor %}
+
+      </nav>
+
+    </div>
 
   </div>
 
 </header>
 
-<script>
-
-document.addEventListener('DOMContentLoaded',()=>{
-
-const toggle=document.querySelector('.mobile-toggle');
-
-const menu=document.querySelector('.mobile-menu');
-
-toggle.addEventListener('click',()=>{
-
-menu.classList.toggle('active');
-
-});
-
-});
-
-</script>
-
 {% schema %}
 {
-  "name":"Header",
-  "settings":[
+  "name": "Luxury Header",
+  "tag": "section",
+  "class": "section-header",
+  "settings": [
+
     {
-      "type":"link_list",
-      "id":"menu",
-      "label":"Navigation Menu"
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Sticky Header",
+      "default": true
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Bottom Border",
+      "default": true
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show Search",
+      "default": true
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show Account",
+      "default": true
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show Cart",
+      "default": true
+    },
+
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FAF8EF"
+    },
+
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#3C3F14"
+    }
+
+  ],
+
+  "presets": [
+    {
+      "name": "Luxury Header"
     }
   ]
 }
