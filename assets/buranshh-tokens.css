@@ -1,0 +1,44 @@
+:root {
+
+  /* Brand Colors */
+
+  --bur-forest: #676A26;
+  --bur-sage: #898C44;
+  --bur-moss: #4F5222;
+  --bur-parchment: #F0EDD0;
+  --bur-bark: #3C3F14;
+  --bur-red: #B54B3C;
+
+  /* Layout */
+
+  --bur-container: 1600px;
+  --bur-container-wide: 1800px;
+
+  /* Typography */
+
+  --bur-heading: "Cormorant Garamond", serif;
+  --bur-body: "Jost", sans-serif;
+
+  /* Spacing */
+
+  --bur-space-xs: 8px;
+  --bur-space-sm: 16px;
+  --bur-space-md: 32px;
+  --bur-space-lg: 64px;
+  --bur-space-xl: 120px;
+
+  /* Radius */
+
+  --bur-radius-sm: 4px;
+  --bur-radius-md: 8px;
+
+  /* Header */
+
+  --bur-header-height: 100px;
+  --bur-header-height-scrolled: 82px;
+
+  /* Animation */
+
+  --bur-transition: 0.4s cubic-bezier(.25,.46,.45,.94);
+
+}

@@ -1,0 +1,261 @@
+{{ 'buranshh-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'buranshh-header.js' | asset_url }}" defer></script>
+
+<header
+  class="bur-header"
+  data-header
+>
+
+  <div class="bur-header__wrapper page-width">
+
+    <!-- LEFT NAV -->
+
+    <nav class="bur-nav bur-nav-left">
+
+      {% for link in linklists[section.settings.menu].links %}
+
+        {% if link.title == section.settings.mega_trigger %}
+
+          <div class="bur-mega-trigger">
+
+            <button type="button">
+              {{ link.title }}
+            </button>
+
+            <div class="bur-mega-menu">
+
+              <div class="bur-mega-menu__inner">
+
+                <div class="bur-mega-links">
+
+                  {% for childlink in link.links %}
+                    <a href="{{ childlink.url }}">
+                      {{ childlink.title }}
+                    </a>
+                  {% endfor %}
+
+                </div>
+
+                <div class="bur-mega-feature">
+
+                  {% if section.settings.mega_image %}
+                    {{
+                      section.settings.mega_image
+                      | image_url: width: 900
+                      | image_tag:
+                      class:'bur-mega-image'
+                    }}
+                  {% endif %}
+
+                  <div class="bur-mega-content">
+
+                    <h3>
+                      {{ section.settings.mega_heading }}
+                    </h3>
+
+                    <p>
+                      {{ section.settings.mega_description }}
+                    </p>
+
+                    {% if section.settings.mega_button_text != blank %}
+                      <a
+                        href="{{ section.settings.mega_button_link }}"
+                        class="bur-btn"
+                      >
+                        {{ section.settings.mega_button_text }}
+                      </a>
+                    {% endif %}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        {% else %}
+
+          <a href="{{ link.url }}">
+            {{ link.title }}
+          </a>
+
+        {% endif %}
+
+      {% endfor %}
+
+    </nav>
+
+    <!-- LOGO -->
+
+    <div class="bur-logo">
+
+      <a href="{{ routes.root_url }}">
+
+        {% if section.settings.logo %}
+          {{
+            section.settings.logo
+            | image_url: width: 800
+            | image_tag:
+            class:'bur-logo-image'
+          }}
+        {% else %}
+          {{ shop.name }}
+        {% endif %}
+
+      </a>
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <div class="bur-actions">
+
+      {% if section.settings.show_search %}
+      <a href="{{ routes.search_url }}">
+        Search
+      </a>
+      {% endif %}
+
+      {% if shop.customer_accounts_enabled and section.settings.show_account %}
+      <a href="{{ routes.account_url }}">
+        Account
+      </a>
+      {% endif %}
+
+      {% if section.settings.show_cart %}
+      <a href="{{ routes.cart_url }}">
+        Cart
+        <span>
+          {{ cart.item_count }}
+        </span>
+      </a>
+      {% endif %}
+
+      <button
+        class="bur-mobile-trigger"
+        data-mobile-open
+      >
+        Menu
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- MOBILE MENU -->
+
+  <div class="bur-mobile-menu" data-mobile-menu>
+
+    <button
+      class="bur-mobile-close"
+      data-mobile-close
+    >
+      Close
+    </button>
+
+    <div class="bur-mobile-menu__content">
+
+      {% for link in linklists[section.settings.menu].links %}
+
+        <a href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</header>
+
+{% schema %}
+{
+  "name":"Buranshh Header",
+  "settings":[
+
+    {
+      "type":"image_picker",
+      "id":"logo",
+      "label":"Logo"
+    },
+
+    {
+      "type":"link_list",
+      "id":"menu",
+      "label":"Main Menu"
+    },
+
+    {
+      "type":"text",
+      "id":"mega_trigger",
+      "label":"Mega Menu Trigger",
+      "default":"Collections"
+    },
+
+    {
+      "type":"image_picker",
+      "id":"mega_image",
+      "label":"Mega Image"
+    },
+
+    {
+      "type":"text",
+      "id":"mega_heading",
+      "label":"Mega Heading",
+      "default":"Rooted In Culture. Worn Every Day."
+    },
+
+    {
+      "type":"textarea",
+      "id":"mega_description",
+      "label":"Mega Description",
+      "default":"Handcrafted pieces inspired by nature and everyday elegance."
+    },
+
+    {
+      "type":"text",
+      "id":"mega_button_text",
+      "label":"Mega Button Text",
+      "default":"Explore Collection"
+    },
+
+    {
+      "type":"url",
+      "id":"mega_button_link",
+      "label":"Mega Button Link"
+    },
+
+    {
+      "type":"checkbox",
+      "id":"show_search",
+      "default":true,
+      "label":"Show Search"
+    },
+
+    {
+      "type":"checkbox",
+      "id":"show_account",
+      "default":true,
+      "label":"Show Account"
+    },
+
+    {
+      "type":"checkbox",
+      "id":"show_cart",
+      "default":true,
+      "label":"Show Cart"
+    }
+
+  ],
+
+  "presets":[
+    {
+      "name":"Buranshh Header"
+    }
+  ]
+}
+{% endschema %}
