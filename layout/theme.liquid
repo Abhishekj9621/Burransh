@@ -4,20 +4,78 @@
 <head>
 
 <meta charset="utf-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>{{ page_title }}</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+{% if page_description %}
+<meta name="description" content="{{ page_description | escape }}">
+{% endif %}
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap"
-rel="stylesheet">
+{% if settings.favicon != blank %}
+<link
+  rel="icon"
+  type="image/png"
+  href="{{ settings.favicon | image_url: width: 64 }}"
+>
+{% endif %}
+
+{{ settings.heading_font | font_face }}
+{{ settings.body_font | font_face }}
 
 {{ content_for_header }}
 
 {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+<style>
+:root {
+
+  /* COLORS */
+  --color-primary: {{ settings.color_primary }};
+  --color-secondary: {{ settings.color_secondary }};
+  --color-accent: {{ settings.color_accent }};
+  --color-bg: {{ settings.color_background }};
+  --color-text: {{ settings.color_text }};
+
+  /* LAYOUT */
+  --container-width: {{ settings.container_width }}px;
+  --section-spacing: {{ settings.section_spacing }}px;
+  --radius: {{ settings.radius }}px;
+
+  /* TYPOGRAPHY */
+  --body-font-size: {{ settings.base_font_size }}px;
+  --heading-font: {{ settings.heading_font.family }}, sans-serif;
+  --body-font: {{ settings.body_font.family }}, sans-serif;
+}
+
+body{
+  font-family: var(--body-font);
+  font-size: var(--body-font-size);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+  font-family: var(--heading-font);
+}
+
+.page-width{
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+section{
+  padding-top: var(--section-spacing);
+  padding-bottom: var(--section-spacing);
+}
+</style>
 
 </head>
 
