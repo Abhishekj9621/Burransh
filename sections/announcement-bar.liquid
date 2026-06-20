@@ -1,0 +1,49 @@
+{{ 'component-announcement-bar.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="announcement-bar"
+  style="
+    background:{{ section.settings.background }};
+    color:{{ section.settings.text_color }};
+  "
+>
+
+  <div class="page-width">
+
+    <div class="announcement-bar__inner">
+
+      <span class="announcement-bar__text">
+        {{ section.settings.text }}
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name":"Announcement Bar",
+  "settings":[
+    {
+      "type":"text",
+      "id":"text",
+      "label":"Text",
+      "default":"Rooted in Culture. Worn Every Day."
+    },
+    {
+      "type":"color",
+      "id":"background",
+      "label":"Background",
+      "default":"#676A26"
+    },
+    {
+      "type":"color",
+      "id":"text_color",
+      "label":"Text Color",
+      "default":"#F0EDD0"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,130 @@
+{{ 'component-header.css' | asset_url | stylesheet_tag }}
+
+<header class="site-header">
+
+  <div class="page-width">
+
+    <div class="header-wrapper">
+
+      <div class="header-left">
+
+        <button class="mobile-toggle">
+
+          ☰
+
+        </button>
+
+        <nav class="header-nav">
+
+          {% for link in linklists[section.settings.menu].links %}
+
+            <a href="{{ link.url }}">
+              {{ link.title }}
+            </a>
+
+          {% endfor %}
+
+        </nav>
+
+      </div>
+
+      <div class="header-logo">
+
+        {% if settings.logo %}
+
+          <a href="/">
+
+            {{
+              settings.logo
+              | image_url: width: 600
+              | image_tag:
+              widths: '200,300,400,600',
+              style: 'max-width:' | append: settings.logo_width | append: 'px'
+            }}
+
+          </a>
+
+        {% else %}
+
+          <a href="/">
+            Buranshh
+          </a>
+
+        {% endif %}
+
+      </div>
+
+      <div class="header-icons">
+
+        <a href="/search">
+
+          🔍
+
+        </a>
+
+        <a href="/account">
+
+          👤
+
+        </a>
+
+        <a href="/cart">
+
+          👜
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="mobile-menu">
+
+    <nav>
+
+      {% for link in linklists[section.settings.menu].links %}
+
+        <a href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+
+      {% endfor %}
+
+    </nav>
+
+  </div>
+
+</header>
+
+<script>
+
+document.addEventListener('DOMContentLoaded',()=>{
+
+const toggle=document.querySelector('.mobile-toggle');
+
+const menu=document.querySelector('.mobile-menu');
+
+toggle.addEventListener('click',()=>{
+
+menu.classList.toggle('active');
+
+});
+
+});
+
+</script>
+
+{% schema %}
+{
+  "name":"Header",
+  "settings":[
+    {
+      "type":"link_list",
+      "id":"menu",
+      "label":"Navigation Menu"
+    }
+  ]
+}
+{% endschema %}

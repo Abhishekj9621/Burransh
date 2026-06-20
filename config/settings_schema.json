@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Theme Settings",
+    "settings": [
+
+      {
+        "type": "header",
+        "content": "Brand"
+      },
+
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Logo Width",
+        "min": 80,
+        "max": 300,
+        "step": 10,
+        "default": 160
+      },
+
+      {
+        "type": "header",
+        "content": "Colors"
+      },
+
+      {
+        "type": "color",
+        "id": "primary_color",
+        "label": "Primary Color",
+        "default": "#676A26"
+      },
+
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "label": "Secondary Color",
+        "default": "#F0EDD0"
+      },
+
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Accent Color",
+        "default": "#B54B3C"
+      }
+
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+.announcement-bar{
+  background:var(--color-forest);
+  color:var(--color-parchment);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.announcement-bar__inner{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.announcement-bar__text{
+  opacity:.9;
+}
