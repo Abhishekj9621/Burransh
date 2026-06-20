@@ -1,165 +1,20 @@
 {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
 
-{% liquid
-
-assign show_section = true
-
-if section.settings.homepage_only and request.page_type != 'index'
-  assign show_section = false
-endif
-
-%}
-
-{% if show_section %}
-
 <section
-  id="announcement-{{ section.id }}"
-  class="announcement-bar {% if section.settings.sticky %}announcement-bar--sticky{% endif %}"
+  class="announcement-bar"
   style="
-    background:{{ section.settings.background }};
-    color:{{ section.settings.text_color }};
-    --announcement-height:{{ section.settings.height }}px;
-    --announcement-font-size:{{ section.settings.font_size }}px;
-    border-bottom:
-      {{ section.settings.border_width }}px
-      solid
-      {{ section.settings.border_color }};
+    background: {{ section.settings.background }};
+    color: {{ section.settings.text_color }};
   "
 >
 
   <div class="announcement-bar__container">
 
-    <div class="announcement-bar__wrapper">
+    <div class="announcement-bar__inner">
 
-      {% if section.blocks.size > 1 %}
+      <div class="announcement-bar__text">
 
-        <button
-          class="announcement-nav announcement-prev"
-          data-prev
-        >
-
-          <svg viewBox="0 0 24 24" fill="none">
-
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-
-          </svg>
-
-        </button>
-
-      {% endif %}
-
-      <div class="announcement-slider">
-
-        {% for block in section.blocks %}
-
-          <div
-            class="announcement-slide {% if forloop.first %}is-active{% endif %}"
-            {{ block.shopify_attributes }}
-          >
-
-            {% if block.settings.link != blank %}
-
-              <a
-                href="{{ block.settings.link }}"
-                class="announcement-slide__link"
-              >
-
-            {% else %}
-
-              <div class="announcement-slide__link">
-
-            {% endif %}
-
-                {% if block.settings.show_icon %}
-
-                  <span class="announcement-slide__icon">
-
-                    {% if block.settings.custom_icon != blank %}
-
-                      {{
-                        block.settings.custom_icon
-                        | image_url: width:40
-                        | image_tag
-                      }}
-
-                    {% else %}
-
-                      ✦
-
-                    {% endif %}
-
-                  </span>
-
-                {% endif %}
-
-                <span class="announcement-slide__text">
-
-                  <span class="announcement-desktop">
-
-                    {{ block.settings.desktop_text }}
-
-                  </span>
-
-                  <span class="announcement-mobile">
-
-                    {% if block.settings.mobile_text != blank %}
-                      {{ block.settings.mobile_text }}
-                    {% else %}
-                      {{ block.settings.desktop_text }}
-                    {% endif %}
-
-                  </span>
-
-                </span>
-
-            {% if block.settings.link != blank %}
-
-              </a>
-
-            {% else %}
-
-              </div>
-
-            {% endif %}
-
-          </div>
-
-        {% endfor %}
-
-      </div>
-
-      {% if section.blocks.size > 1 %}
-
-        <button
-          class="announcement-nav announcement-next"
-          data-next
-        >
-
-          <svg viewBox="0 0 24 24" fill="none">
-
-            <path
-              d="M9 18L15 12L9 6"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-
-          </svg>
-
-        </button>
-
-      {% endif %}
-
-      <div class="announcement-progress">
-
-        <div class="announcement-progress-bar"></div>
+        {{ section.settings.text }}
 
       </div>
 
@@ -169,106 +24,33 @@ endif
 
 </section>
 
-<script>
-
-(() => {
-
-const section =
-document.getElementById('announcement-{{ section.id }}');
-
-if(!section) return;
-
-const slides =
-section.querySelectorAll('.announcement-slide');
-
-const nextBtn =
-section.querySelector('[data-next]');
-
-const prevBtn =
-section.querySelector('[data-prev]');
-
-const progress =
-section.querySelector('.announcement-progress-bar');
-
-let current = 0;
-
-const speed = 5000;
-
-function showSlide(index){
-
-slides.forEach(slide => {
-
-slide.classList.remove('is-active');
-
-});
-
-slides[index].classList.add('is-active');
-
-if(progress){
-
-progress.style.transition = 'none';
-
-progress.style.width = '0%';
-
-requestAnimationFrame(() => {
-
-progress.style.transition =
-`width ${speed}ms linear`;
-
-progress.style.width = '100%';
-
-});
-
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement Text",
+      "default": "✦ Rooted In Culture • Worn Every Day ✦"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#676A26"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#F0EDD0"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
 }
-
-}
-
-function next(){
-
-current++;
-
-if(current >= slides.length){
-
-current = 0;
-
-}
-
-showSlide(current);
-
-}
-
-function prev(){
-
-current--;
-
-if(current < 0){
-
-current = slides.length - 1;
-
-}
-
-showSlide(current);
-
-}
-
-if(nextBtn){
-
-nextBtn.addEventListener('click',next);
-
-}
-
-if(prevBtn){
-
-prevBtn.addEventListener('click',prev);
-
-}
-
-showSlide(0);
-
-setInterval(next,speed);
-
-})();
-
-</script>
-
-{% endif %}
+{% endschema %}
