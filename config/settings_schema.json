@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Theme Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Branding"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Logo Width",
+        "min": 80,
+        "max": 300,
+        "step": 10,
+        "default": 160
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      },
+
+      {
+        "type": "header",
+        "content": "Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary Color",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary Color",
+        "default": "#666666"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent Color",
+        "default": "#C49A6C"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background Color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text Color",
+        "default": "#222222"
+      },
+
+      {
+        "type": "header",
+        "content": "Typography"
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading Font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Body Font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "range",
+        "id": "base_font_size",
+        "label": "Base Font Size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "default": 16
+      },
+
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "range",
+        "id": "container_width",
+        "label": "Container Width",
+        "min": 1100,
+        "max": 1600,
+        "step": 50,
+        "default": 1400
+      },
+      {
+        "type": "range",
+        "id": "section_spacing",
+        "label": "Section Spacing",
+        "min": 40,
+        "max": 140,
+        "step": 10,
+        "default": 80
+      },
+      {
+        "type": "range",
+        "id": "radius",
+        "label": "Border Radius",
+        "min": 0,
+        "max": 30,
+        "step": 2,
+        "default": 12
+      },
+
+      {
+        "type": "header",
+        "content": "Social Media"
+      },
+      {
+        "type": "url",
+        "id": "instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "youtube",
+        "label": "YouTube"
+      },
+      {
+        "type": "url",
+        "id": "pinterest",
+        "label": "Pinterest"
+      }
+    ]
+  }
+]
